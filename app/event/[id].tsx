@@ -1,7 +1,7 @@
 import { Colors } from '@/src/constants/colors';
 import { mockEvents } from '@/src/data/mockEvents';
-import { Event } from '@/src/types/event';
 import { paymentStore } from '@/src/store/paymentStore';
+import { Event } from '@/src/types/event';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import {
@@ -61,23 +61,23 @@ export default function EventDetailScreen() {
             `"${event.title}" costs $${event.price}. How would you like to proceed?`,
             [
                 { text: 'Cancel', style: 'cancel' },
-                { 
-                    text: 'Pay Now', 
+                {
+                    text: 'Pay Now',
                     onPress: () => {
                         Alert.alert('Payment Successful!', 'Your payment has been processed and you\'re registered for the event.');
                     }
                 },
-                { 
-                    text: 'Pay Later', 
+                {
+                    text: 'Pay Later',
                     onPress: () => {
                         paymentStore.addToCart(event.id);
                         Alert.alert(
-                            'Added to Payment Queue', 
+                            'Added to Payment Queue',
                             'Event has been added to your payment list. You can pay later from the Payment tab.',
                             [
                                 { text: 'OK', style: 'default' },
-                                { 
-                                    text: 'Go to Payment', 
+                                {
+                                    text: 'Go to Payment',
                                     onPress: () => router.push('/(tabs)/payment')
                                 }
                             ]

@@ -1,15 +1,15 @@
-import React from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  SafeAreaView, 
-  Pressable,
-  ScrollView,
-  Alert
-} from 'react-native';
 import { Colors } from '@/src/constants/colors';
 import * as Constants from 'expo-constants';
+import React from 'react';
+import {
+  Alert,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 
 export default function SettingsScreen() {
   const handleMenuPress = (option: string) => {
@@ -123,7 +123,7 @@ export default function SettingsScreen() {
 
         {/* Logout Button */}
         <View style={styles.logoutSection}>
-          <Pressable 
+          <Pressable
             style={styles.logoutButton}
             onPress={() => Alert.alert('Logout', 'Are you sure you want to logout?')}
           >
