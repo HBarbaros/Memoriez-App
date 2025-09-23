@@ -1,7 +1,7 @@
-import { Colors } from '@/src/constants/colors';
-import { mockEvents } from '@/src/data/mockEvents';
-import { PaymentItem, paymentStore } from '@/src/store/paymentStore';
-import { Event } from '@/src/types/event';
+import { Colors } from '@/app/constants/colors';
+import { mockEvents } from '@/app/data/mockEvents';
+import { PaymentItem, paymentStore } from '@/app/store/paymentStore';
+import { Event } from '@/app/types/event';
 import React, { useEffect, useState } from 'react';
 import {
     Alert,

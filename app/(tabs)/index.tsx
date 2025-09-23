@@ -1,8 +1,8 @@
-import CategoryChips from '@/src/components/CategoryChips';
-import EventCard from '@/src/components/EventCard';
-import { Colors } from '@/src/constants/colors';
-import { mockCategories, mockEvents } from '@/src/data/mockEvents';
-import { Event } from '@/src/types/event';
+import CategoryChips from '@/app/components/CategoryChips';
+import EventCard from '@/app/components/EventCard';
+import { Colors } from '@/app/constants/colors';
+import { mockCategories, mockEvents } from '@/app/data/mockEvents';
+import { Event } from '@/app/types/event';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Location from 'expo-location';
 import React, { useEffect, useRef, useState } from 'react';

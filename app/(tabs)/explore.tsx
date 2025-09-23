@@ -1,4 +1,4 @@
-import { Colors } from '@/src/constants/colors';
+import { Colors } from '@/app/constants/colors';
 import * as Constants from 'expo-constants';
 import React from 'react';
 import {

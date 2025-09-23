@@ -1,7 +1,7 @@
-import { Colors } from '@/src/constants/colors';
-import { mockEvents } from '@/src/data/mockEvents';
-import { paymentStore } from '@/src/store/paymentStore';
-import { Event } from '@/src/types/event';
+import { Colors } from '@/app/constants/colors';
+import { mockEvents } from '@/app/data/mockEvents';
+import { paymentStore } from '@/app/store/paymentStore';
+import { Event } from '@/app/types/event';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import {
