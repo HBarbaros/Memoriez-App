@@ -147,7 +147,7 @@ export default function HomeScreen() {
         <SafeAreaView>
           {/* Top Header with Title and Filter */}
           <View style={styles.topHeader}>
-            <Text style={styles.headerTitle}>Aktuellt</Text>
+            <Text style={styles.headerTitle}>Events</Text>
             <Pressable
               style={styles.filterButton}
               onPress={() => setShowFilterModal(true)}
@@ -168,13 +168,13 @@ export default function HomeScreen() {
           styles.scrollableSection,
           {
             height: scrollY.interpolate({
-              inputRange: [0, 120],
-              outputRange: [140, 0],
+              inputRange: [0, 200],
+              outputRange: [120, 0],
               extrapolate: 'clamp',
             }),
             opacity: scrollY.interpolate({
-              inputRange: [0, 80, 120],
-              outputRange: [1, 0.3, 0],
+              inputRange: [0, 120, 200],
+              outputRange: [1, 0.6, 0],
               extrapolate: 'clamp',
             }),
           }
@@ -185,9 +185,10 @@ export default function HomeScreen() {
           <Text style={styles.searchIcon}>🔍</Text>
           <TextInput
             style={styles.searchInput}
-            placeholder="Sök event i närheten..."
+            placeholder="Search events..."
             value={searchQuery}
             onChangeText={setSearchQuery}
+            placeholderTextColor={Colors.textSecondary}
           />
         </View>
 
@@ -357,12 +358,11 @@ const styles = StyleSheet.create({
 
   // Simplified Header Styles (VIPMonkey-like)
   headerSection: {
-    paddingBottom: 16,
+    paddingBottom: 8,
   },
   scrollableSection: {
     backgroundColor: Colors.surface,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 12,
     overflow: 'hidden',
   },
   headerWrapper: {
@@ -377,11 +377,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 15,
+    paddingTop: 8,
+    paddingBottom: 12,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: Colors.white,
   },
@@ -413,23 +413,30 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.white + '20',
+    backgroundColor: Colors.white,
     borderRadius: 25,
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 10,
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: Colors.white + '30',
+    marginHorizontal: 20,
+    shadowColor: Colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   searchIcon: {
     fontSize: 16,
     marginRight: 10,
-    opacity: 0.7,
+    color: Colors.textSecondary,
   },
   searchInput: {
     flex: 1,
     fontSize: 15,
-    color: Colors.white,
+    color: Colors.text,
     fontWeight: '500',
   },
 

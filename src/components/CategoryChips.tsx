@@ -78,7 +78,7 @@ const CategoryChips: React.FC<CategoryChipsProps> = ({
 
 const styles = StyleSheet.create({
     container: {
-        paddingVertical: 16,
+        paddingVertical: 12,
     },
     scrollContainer: {
         paddingHorizontal: 20,
@@ -87,10 +87,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: Colors.surface,
-        borderRadius: 20,
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        marginRight: 12,
+        borderRadius: 16,
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        marginRight: 8,
         borderWidth: 1,
         borderColor: Colors.border,
     },
@@ -99,11 +99,11 @@ const styles = StyleSheet.create({
         borderColor: Colors.primary,
     },
     chipIcon: {
-        fontSize: 14,
-        marginRight: 6,
+        fontSize: 12,
+        marginRight: 4,
     },
     chipText: {
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: '500',
         color: Colors.text,
     },
