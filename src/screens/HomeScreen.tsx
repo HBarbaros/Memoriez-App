@@ -8,13 +8,14 @@ import {
   TextInput,
   ScrollView 
 } from 'react-native';
-import { mockEvents, mockCategories } from '@/src/data/mockEvents';
-import { Event } from '@/src/types/event';
-import { Colors } from '@/src/constants/colors';
-import EventCard from '@/src/components/EventCard';
-import CategoryChips from '@/src/components/CategoryChips';
+import { mockEvents, mockCategories } from '../data/mockEvents';
+import { Event } from '../types/event';
+import { Colors } from '../constants/colors';
+import EventCard from '../components/EventCard';
+import CategoryChips from '../components/CategoryChips';
 
-export default function HomeScreen() {
+// HomeScreen: Shows list of events
+const HomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -65,7 +66,7 @@ export default function HomeScreen() {
       />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -105,3 +106,5 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 });
+
+export default HomeScreen;

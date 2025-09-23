@@ -1,0 +1,33 @@
+// App color palette
+
+export const Colors = {
+  primary: '#00C896', // Green like VIPMonkey
+  secondary: '#1A1A1A',
+  background: '#FFFFFF',
+  surface: '#F8F9FA',
+  text: '#1A1A1A',
+  textSecondary: '#6B7280',
+  border: '#E5E7EB',
+  white: '#FFFFFF',
+  black: '#000000',
+  gray: {
+    50: '#F9FAFB',
+    100: '#F3F4F6',
+    200: '#E5E7EB',
+    300: '#D1D5DB',
+    400: '#9CA3AF',
+    500: '#6B7280',
+    600: '#4B5563',
+    700: '#374151',
+    800: '#1F2937',
+    900: '#111827',
+  },
+  categories: {
+    music: '#FF6B6B',
+    party: '#4ECDC4',
+    conference: '#45B7D1',
+    sports: '#FFA726',
+    food: '#66BB6A',
+    culture: '#AB47BC',
+  }
+};

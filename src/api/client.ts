@@ -1,0 +1,3 @@
+// API client setup (e.g., axios or fetch wrapper)
+// All requests to backend should go through here
+// ...
