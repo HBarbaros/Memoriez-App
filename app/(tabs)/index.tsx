@@ -26,7 +26,7 @@ export default function HomeScreen() {
   });
 
   const renderEventItem = ({ item }: { item: Event }) => (
-    <EventCard event={item} onPress={() => console.log('Event pressed:', item.title)} />
+    <EventCard event={item} />
   );
 
   return (

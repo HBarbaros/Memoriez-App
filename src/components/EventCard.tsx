@@ -1,4 +1,5 @@
 
+import { router } from 'expo-router';
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Colors } from '../constants/colors';
@@ -6,11 +7,19 @@ import { Event } from '../types/event';
 
 interface EventCardProps {
     event: Event;
-    onPress: () => void;
+    onPress?: () => void; // Make optional since we'll handle navigation internally
 }
 
 // EventCard component for displaying event info
 const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
+    const handlePress = () => {
+        if (onPress) {
+            onPress();
+        }
+        // Navigate to event detail page
+        router.push(`/event/${event.id}`);
+    };
+
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -24,7 +33,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
     };
 
     return (
-        <Pressable style={styles.container} onPress={onPress}>
+        <Pressable style={styles.container} onPress={handlePress}>
             <Image
                 source={{ uri: event.imageUrl || 'https://via.placeholder.com/300x200' }}
                 style={styles.image}
