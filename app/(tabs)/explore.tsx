@@ -1,112 +1,299 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React from 'react';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  SafeAreaView, 
+  Pressable,
+  ScrollView,
+  Alert
+} from 'react-native';
+import { Colors } from '@/src/constants/colors';
+import * as Constants from 'expo-constants';
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+export default function SettingsScreen() {
+  const handleMenuPress = (option: string) => {
+    Alert.alert('Coming Soon', `${option} feature will be available soon!`);
+  };
 
-export default function TabTwoScreen() {
+  const appVersion = Constants.default.expoConfig?.version || '1.0.0';
+
+  const menuItems = [
+    {
+      id: 'profile',
+      title: 'My Profile',
+      icon: '👤',
+      description: 'Edit personal information and preferences',
+    },
+    {
+      id: 'payments',
+      title: 'Payment Methods',
+      icon: '💳',
+      description: 'Manage cards and payment options',
+    },
+    {
+      id: 'notifications',
+      title: 'Notifications',
+      icon: '🔔',
+      description: 'Push notifications and email settings',
+    },
+    {
+      id: 'language',
+      title: 'Language',
+      icon: '🌍',
+      description: 'App language and region settings',
+      value: 'English',
+    },
+    {
+      id: 'privacy',
+      title: 'Privacy & Security',
+      icon: '🔒',
+      description: 'Account security and privacy controls',
+    },
+    {
+      id: 'help',
+      title: 'Help & Support',
+      icon: '❓',
+      description: 'FAQ, contact support, and tutorials',
+    },
+    {
+      id: 'about',
+      title: 'About',
+      icon: 'ℹ️',
+      description: 'App version, terms, and privacy policy',
+      value: `v${appVersion}`,
+    },
+  ];
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Settings</Text>
+        <Text style={styles.subtitle}>Manage your account and preferences</Text>
+      </View>
+
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* User Info Section */}
+        <View style={styles.userSection}>
+          <View style={styles.userAvatar}>
+            <Text style={styles.avatarText}>JD</Text>
+          </View>
+          <View style={styles.userInfo}>
+            <Text style={styles.userName}>John Doe</Text>
+            <Text style={styles.userEmail}>john.doe@example.com</Text>
+            <Pressable style={styles.editProfileButton}>
+              <Text style={styles.editProfileText}>Edit Profile</Text>
+            </Pressable>
+          </View>
+        </View>
+
+        {/* Menu Items */}
+        <View style={styles.menuSection}>
+          {menuItems.map((item) => (
+            <Pressable
+              key={item.id}
+              style={styles.menuItem}
+              onPress={() => handleMenuPress(item.title)}
+            >
+              <View style={styles.menuItemLeft}>
+                <Text style={styles.menuIcon}>{item.icon}</Text>
+                <View style={styles.menuTextContainer}>
+                  <Text style={styles.menuTitle}>{item.title}</Text>
+                  <Text style={styles.menuDescription}>{item.description}</Text>
+                </View>
+              </View>
+              <View style={styles.menuItemRight}>
+                {item.value && (
+                  <Text style={styles.menuValue}>{item.value}</Text>
+                )}
+                <Text style={styles.menuArrow}>›</Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+
+        {/* App Info */}
+        <View style={styles.appInfoSection}>
+          <Text style={styles.appName}>Memoriez Events</Text>
+          <Text style={styles.appDescription}>
+            Discover amazing events and create unforgettable memories
+          </Text>
+          <Text style={styles.appVersion}>Version {appVersion}</Text>
+        </View>
+
+        {/* Logout Button */}
+        <View style={styles.logoutSection}>
+          <Pressable 
+            style={styles.logoutButton}
+            onPress={() => Alert.alert('Logout', 'Are you sure you want to logout?')}
+          >
+            <Text style={styles.logoutText}>Sign Out</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
   },
-  titleContainer: {
+  header: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: Colors.text,
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: Colors.textSecondary,
+  },
+  content: {
+    flex: 1,
+  },
+  userSection: {
     flexDirection: 'row',
-    gap: 8,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    backgroundColor: Colors.surface,
+    marginHorizontal: 20,
+    marginBottom: 20,
+    borderRadius: 16,
+  },
+  userAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  avatarText: {
+    color: Colors.white,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  userInfo: {
+    flex: 1,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: Colors.text,
+    marginBottom: 4,
+  },
+  userEmail: {
+    fontSize: 14,
+    color: Colors.textSecondary,
+    marginBottom: 8,
+  },
+  editProfileButton: {
+    alignSelf: 'flex-start',
+  },
+  editProfileText: {
+    fontSize: 14,
+    color: Colors.primary,
+    fontWeight: '500',
+  },
+  menuSection: {
+    paddingHorizontal: 20,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    backgroundColor: Colors.white,
+    marginBottom: 2,
+    borderRadius: 12,
+    shadowColor: Colors.black,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  menuItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  menuIcon: {
+    fontSize: 20,
+    marginRight: 12,
+  },
+  menuTextContainer: {
+    flex: 1,
+  },
+  menuTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: Colors.text,
+    marginBottom: 2,
+  },
+  menuDescription: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+  },
+  menuItemRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  menuValue: {
+    fontSize: 14,
+    color: Colors.textSecondary,
+    marginRight: 8,
+  },
+  menuArrow: {
+    fontSize: 18,
+    color: Colors.textSecondary,
+  },
+  appInfoSection: {
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 32,
+  },
+  appName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: Colors.text,
+    marginBottom: 8,
+  },
+  appDescription: {
+    fontSize: 14,
+    color: Colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  appVersion: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+  },
+  logoutSection: {
+    paddingHorizontal: 20,
+    paddingBottom: 32,
+  },
+  logoutButton: {
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: '#FF6B6B',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  logoutText: {
+    color: '#FF6B6B',
+    fontSize: 16,
+    fontWeight: '500',
   },
 });
