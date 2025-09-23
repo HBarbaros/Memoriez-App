@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
-import { 
-  Text, 
-  View, 
-  FlatList, 
-  StyleSheet, 
-  SafeAreaView,
-  TextInput,
-  ScrollView 
-} from 'react-native';
-import { mockEvents, mockCategories } from '@/src/data/mockEvents';
-import { Event } from '@/src/types/event';
-import { Colors } from '@/src/constants/colors';
-import EventCard from '@/src/components/EventCard';
 import CategoryChips from '@/src/components/CategoryChips';
+import EventCard from '@/src/components/EventCard';
+import { Colors } from '@/src/constants/colors';
+import { mockCategories, mockEvents } from '@/src/data/mockEvents';
+import { Event } from '@/src/types/event';
+import React, { useState } from 'react';
+import {
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
 
 export default function HomeScreen() {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -22,7 +21,7 @@ export default function HomeScreen() {
   const filteredEvents = mockEvents.filter((event: Event) => {
     const matchesCategory = !selectedCategory || event.category === selectedCategory;
     const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         event.description.toLowerCase().includes(searchQuery.toLowerCase());
+      event.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 

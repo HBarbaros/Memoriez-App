@@ -1,4 +1,4 @@
-import { Event, Category } from '../types/event';
+import { Category, Event } from '../types/event';
 
 // Mock categories för testing
 export const mockCategories: Category[] = [
