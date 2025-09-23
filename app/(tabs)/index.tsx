@@ -3,23 +3,22 @@ import EventCard from '@/src/components/EventCard';
 import { Colors } from '@/src/constants/colors';
 import { mockCategories, mockEvents } from '@/src/data/mockEvents';
 import { Event } from '@/src/types/event';
-import React, { useState, useEffect, useRef } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
+import * as Location from 'expo-location';
+import React, { useEffect, useRef, useState } from 'react';
 import {
+  Animated,
+  Dimensions,
   FlatList,
+  Modal,
+  Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  View,
-  Pressable,
-  ScrollView,
-  Alert,
-  Animated,
-  Modal,
-  Dimensions
+  View
 } from 'react-native';
-import * as Location from 'expo-location';
-import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 
@@ -32,7 +31,7 @@ export default function HomeScreen() {
   const [sortBy, setSortBy] = useState<string>('date');
   const [locationFilter, setLocationFilter] = useState<string>('all'); // 'all', 'nearby', 'current_city'
   const [distanceRadius, setDistanceRadius] = useState<number>(20); // km
-  
+
   // Animation for header collapse
   const scrollY = useRef(new Animated.Value(0)).current;
   const headerHeight = scrollY.interpolate({
@@ -56,13 +55,13 @@ export default function HomeScreen() {
 
       const location = await Location.getCurrentPositionAsync({});
       setUserLocation(location);
-      
+
       // Get city name from coordinates
       const reverseGeocode = await Location.reverseGeocodeAsync({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
       });
-      
+
       if (reverseGeocode.length > 0) {
         const city = reverseGeocode[0].city || reverseGeocode[0].district || 'Unknown';
         setCurrentCity(city);
@@ -78,22 +77,22 @@ export default function HomeScreen() {
     const R = 6371; // Earth's radius in kilometers
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
 
   // Enhanced filtering with location-based search
   const filteredEvents = mockEvents.filter((event: Event) => {
     const matchesCategory = !selectedCategory || event.category === selectedCategory;
-    const matchesSearch = !searchQuery || 
+    const matchesSearch = !searchQuery ||
       event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       event.location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       event.organizer.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     // Location-based filtering
     let matchesLocation = true;
     if (locationFilter === 'nearby' && userLocation) {
@@ -107,7 +106,7 @@ export default function HomeScreen() {
     } else if (locationFilter === 'current_city') {
       matchesLocation = event.location.address.toLowerCase().includes(currentCity.toLowerCase());
     }
-    
+
     return matchesCategory && matchesSearch && matchesLocation;
   });
 
@@ -149,7 +148,7 @@ export default function HomeScreen() {
           {/* Top Header with Title and Filter */}
           <View style={styles.topHeader}>
             <Text style={styles.headerTitle}>Aktuellt</Text>
-            <Pressable 
+            <Pressable
               style={styles.filterButton}
               onPress={() => setShowFilterModal(true)}
             >
@@ -164,7 +163,7 @@ export default function HomeScreen() {
       </LinearGradient>
 
       {/* Collapsible Search + Categories */}
-      <Animated.View 
+      <Animated.View
         style={[
           styles.scrollableSection,
           {
@@ -230,7 +229,7 @@ export default function HomeScreen() {
             <SafeAreaView>
               <View style={styles.modalHeaderContent}>
                 <Text style={styles.modalTitle}>Filter Events</Text>
-                <Pressable 
+                <Pressable
                   style={styles.closeButton}
                   onPress={() => setShowFilterModal(false)}
                 >
@@ -324,11 +323,11 @@ export default function HomeScreen() {
                 ))}
               </View>
             </View>
-            
+
             {/* Action Buttons */}
             <View style={styles.modalActions}>
-              <Pressable 
-                style={styles.applyButton} 
+              <Pressable
+                style={styles.applyButton}
                 onPress={() => setShowFilterModal(false)}
               >
                 <LinearGradient
@@ -338,7 +337,7 @@ export default function HomeScreen() {
                   <Text style={styles.applyButtonText}>Apply Filters</Text>
                 </LinearGradient>
               </Pressable>
-              
+
               <Pressable style={styles.clearButton} onPress={clearFilters}>
                 <Text style={styles.clearButtonText}>Clear All Filters</Text>
               </Pressable>
@@ -355,8 +354,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
   },
-  
-    // Simplified Header Styles (VIPMonkey-like)
+
+  // Simplified Header Styles (VIPMonkey-like)
   headerSection: {
     paddingBottom: 16,
   },
@@ -386,7 +385,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Colors.white,
   },
-  
+
   // Filter Icon (VIPMonkey style)
   filterIconContainer: {
     width: 24,
@@ -402,14 +401,14 @@ const styles = StyleSheet.create({
     width: '70%',
     alignSelf: 'flex-end',
   },
-  
+
   // Search + Categories Container
   searchCategoriesContainer: {
     paddingHorizontal: 20,
     paddingBottom: 20,
     overflow: 'hidden',
   },
-  
+
   // Compact Search
   searchContainer: {
     flexDirection: 'row',
@@ -433,12 +432,12 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontWeight: '500',
   },
-  
+
   // Categories Wrapper
   categoriesWrapper: {
     marginTop: 5,
   },
-  
+
   // Events List with proper margins
   headerContainer: {
     backgroundColor: Colors.background,
@@ -665,7 +664,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  
+
   // Modern Hero Section Styles
   heroSection: {
     paddingBottom: 20,
@@ -700,7 +699,7 @@ const styles = StyleSheet.create({
   filterIcon: {
     fontSize: 18,
   },
-  
+
   // Hero Content
   heroContent: {
     paddingHorizontal: 20,
@@ -717,18 +716,18 @@ const styles = StyleSheet.create({
     color: Colors.white + 'CC',
     lineHeight: 24,
   },
-  
+
   // Search Styles
   searchWrapper: {
     paddingHorizontal: 20,
   },
-  
+
   // Categories Section
   categoriesSection: {
     paddingVertical: 20,
     backgroundColor: Colors.surface,
   },
-  
+
   // Results Section
   resultsSection: {
     flex: 1,
@@ -751,7 +750,7 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     fontWeight: '500',
   },
-  
+
   // Modal Header Content
   modalHeaderContent: {
     flexDirection: 'row',
@@ -765,7 +764,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Colors.white,
   },
-  
+
   // Filter Grid/Cards
   filterGrid: {
     gap: 12,
@@ -797,7 +796,7 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     fontWeight: '600',
   },
-  
+
   // Radius Buttons
   radiusContainer: {
     flexDirection: 'row',
@@ -825,7 +824,7 @@ const styles = StyleSheet.create({
   radiusButtonTextActive: {
     color: Colors.primary,
   },
-  
+
   // Sort Grid
   sortGrid: {
     flexDirection: 'row',
@@ -859,7 +858,7 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     fontWeight: '600',
   },
-  
+
   // Modal Actions
   modalActions: {
     paddingTop: 20,
