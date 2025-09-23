@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white,
         borderRadius: 16,
         marginBottom: 16,
+        marginHorizontal: 4, // Reduced horizontal margin for VIPMonkey-like spacing
         shadowColor: Colors.black,
         shadowOffset: {
             width: 0,

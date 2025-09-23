@@ -78,11 +78,10 @@ const CategoryChips: React.FC<CategoryChipsProps> = ({
 
 const styles = StyleSheet.create({
     container: {
-        marginBottom: 20,
+        paddingVertical: 16,
     },
     scrollContainer: {
         paddingHorizontal: 20,
-        paddingVertical: 8,
     },
     chip: {
         flexDirection: 'row',
