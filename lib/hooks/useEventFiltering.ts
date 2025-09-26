@@ -1,5 +1,5 @@
-import { mockEvents } from '@/app/data/mockEvents';
-import { Event } from '@/app/types/event';
+import { mockEvents } from '@/lib/data/mockEvents';
+import { Event } from '@/lib/types/event';
 import { useMemo, useState } from 'react';
 
 interface UseEventFilteringProps {

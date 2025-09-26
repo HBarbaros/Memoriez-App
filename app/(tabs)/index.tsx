@@ -1,16 +1,16 @@
 // Components
-import { EventsList } from '@/app/components/EventsList';
-import { FilterModal } from '@/app/components/FilterModal';
-import { HomeHeader } from '@/app/components/HomeHeader';
-import { SearchSection } from '@/app/components/SearchSection';
+import { EventsList } from '@/lib/components/EventsList';
+import { FilterModal } from '@/lib/components/FilterModal';
+import { HomeHeader } from '@/lib/components/HomeHeader';
+import { SearchSection } from '@/lib/components/SearchSection';
 
 // Hooks
-import { useEventFiltering } from '@/app/hooks/useEventFiltering';
-import { useLocationFilter } from '@/app/hooks/useLocationFilter';
-import { useScrollAnimation } from '@/app/hooks/useScrollAnimation';
+import { useEventFiltering } from '@/lib/hooks/useEventFiltering';
+import { useLocationFilter } from '@/lib/hooks/useLocationFilter';
+import { useScrollAnimation } from '@/lib/hooks/useScrollAnimation';
 
 // Other imports
-import { mockCategories } from '@/app/data/mockEvents';
+import { mockCategories } from '@/lib/data/mockEvents';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 

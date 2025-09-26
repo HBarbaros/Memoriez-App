@@ -1,4 +1,4 @@
-import { Colors } from '@/app/constants/colors';
+import { Colors } from '@/lib/constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Dimensions, Modal, Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';

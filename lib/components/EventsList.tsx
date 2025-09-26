@@ -1,5 +1,5 @@
-import EventCard from '@/app/components/EventCard';
-import { Event } from '@/app/types/event';
+import EventCard from '@/lib/components/EventCard';
+import { Event } from '@/lib/types/event';
 import React from 'react';
 import { FlatList } from 'react-native';
 

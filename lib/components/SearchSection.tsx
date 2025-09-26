@@ -1,5 +1,5 @@
-import CategoryChips from '@/app/components/CategoryChips';
-import { Colors } from '@/app/constants/colors';
+import CategoryChips from '@/lib/components/CategoryChips';
+import { Colors } from '@/lib/constants/colors';
 import React from 'react';
 import { Animated, Text, TextInput, View } from 'react-native';
 

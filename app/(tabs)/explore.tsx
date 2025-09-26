@@ -1,4 +1,4 @@
-import { Colors } from '@/app/constants/colors';
+import { Colors } from '@/lib/constants/colors';
 import * as Constants from 'expo-constants';
 import {
   Alert,

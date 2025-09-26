@@ -1,3 +1,0 @@
-
-// EventDetailScreen: Shows event details
-// ...
