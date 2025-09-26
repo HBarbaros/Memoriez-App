@@ -19,13 +19,10 @@ export default function PaymentScreen() {
     const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
 
     useEffect(() => {
-        // Ladda initial cart items
         setCartItems(paymentStore.getCartItems());
 
-        // Lyssna på förändringar i cart
         const unsubscribe = paymentStore.subscribe(() => {
             setCartItems(paymentStore.getCartItems());
-            // Rensa selection om items har tagits bort
             setSelectedEvents(prev =>
                 prev.filter(id => paymentStore.isInCart(id))
             );
@@ -34,7 +31,6 @@ export default function PaymentScreen() {
         return unsubscribe;
     }, []);
 
-    // Hitta event objektet baserat på cart item
     const getCartEventsWithDetails = () => {
         return cartItems.map(cartItem => {
             const event = mockEvents.find(e => e.id === cartItem.eventId);
@@ -89,9 +85,7 @@ export default function PaymentScreen() {
                 {
                     text: 'Pay Now',
                     onPress: () => {
-                        // Simulera betalning
                         Alert.alert('Payment Successful!', 'Your payment has been processed.');
-                        // Ta bort betalade events från kön
                         paymentStore.markAsPaid(selectedEvents);
                         setSelectedEvents([]);
                     }
@@ -164,7 +158,7 @@ export default function PaymentScreen() {
                 </View>
             ) : (
                 <>
-                    {/* Events List */}
+
                     <FlatList
                         data={cartEventsWithDetails}
                         renderItem={renderCartItem}
@@ -173,7 +167,6 @@ export default function PaymentScreen() {
                         showsVerticalScrollIndicator={false}
                     />
 
-                    {/* Payment Summary */}
                     <View style={styles.paymentSummary}>
                         <View style={styles.summaryRow}>
                             <Text style={styles.summaryLabel}>
@@ -251,7 +244,7 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         paddingHorizontal: 20,
-        paddingBottom: 120, // Space for payment summary
+        paddingBottom: 120,
     },
     cartItem: {
         backgroundColor: Colors.white,

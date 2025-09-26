@@ -1,7 +1,5 @@
-// App color palette
-
 export const Colors = {
-  primary: '#00C896', // Green like VIPMonkey
+  primary: '#00C896', 
   secondary: '#1A1A1A',
   background: '#FFFFFF',
   surface: '#F8F9FA',

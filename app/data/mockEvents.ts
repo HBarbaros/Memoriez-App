@@ -1,6 +1,5 @@
 import { Category, Event } from '../types/event';
 
-// Mock categories för testing
 export const mockCategories: Category[] = [
   { id: '1', name: 'Music', color: '#FF6B6B', icon: '🎵' },
   { id: '2', name: 'Party', color: '#4ECDC4', icon: '🎉' },
@@ -10,7 +9,6 @@ export const mockCategories: Category[] = [
   { id: '6', name: 'Culture', color: '#AB47BC', icon: '🎭' },
 ];
 
-// Mock events för testing
 export const mockEvents: Event[] = [
   {
     id: '1',

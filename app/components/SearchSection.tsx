@@ -32,7 +32,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
                 }
             ]}
         >
-            {/* Search Bar */}
+
             <View style={styles.searchContainer}>
                 <Text style={styles.searchIcon}>🔍</Text>
                 <TextInput
@@ -44,7 +44,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
                 />
             </View>
 
-            {/* Category Chips */}
+
             <CategoryChips
                 categories={categories}
                 selectedCategory={selectedCategory}

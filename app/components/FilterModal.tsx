@@ -38,7 +38,6 @@ export const FilterModal: React.FC<FilterModalProps> = ({
             onRequestClose={onClose}
         >
             <View style={styles.modalContainer}>
-                {/* Modal Header */}
                 <LinearGradient
                     colors={[Colors.primary, Colors.primary + '90']}
                     style={styles.modalHeader}
@@ -54,7 +53,6 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                 </LinearGradient>
 
                 <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
-                    {/* Location Filter */}
                     <View style={styles.filterSection}>
                         <Text style={styles.filterTitle}>📍 Location</Text>
                         <View style={styles.filterGrid}>
@@ -83,7 +81,6 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                         </View>
                     </View>
 
-                    {/* Distance Radius */}
                     {locationFilter === 'nearby' && (
                         <View style={styles.filterSection}>
                             <Text style={styles.filterTitle}>📏 Distance Radius</Text>
@@ -109,7 +106,6 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                         </View>
                     )}
 
-                    {/* Sort Options */}
                     <View style={styles.filterSection}>
                         <Text style={styles.filterTitle}>🔄 Sort By</Text>
                         <View style={styles.sortGrid}>
@@ -139,7 +135,6 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                         </View>
                     </View>
 
-                    {/* Action Buttons */}
                     <View style={styles.modalActions}>
                         <Pressable style={styles.applyButton} onPress={onClose}>
                             <LinearGradient

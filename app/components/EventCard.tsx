@@ -1,4 +1,3 @@
-
 import { router } from 'expo-router';
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -7,16 +6,14 @@ import { Event } from '../types/event';
 
 interface EventCardProps {
     event: Event;
-    onPress?: () => void; // Make optional since we'll handle navigation internally
+    onPress?: () => void;
 }
 
-// EventCard component for displaying event info
 const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
     const handlePress = () => {
         if (onPress) {
             onPress();
         }
-        // Navigate to event detail page
         router.push(`/event/${event.id}`);
     };
 
@@ -29,7 +26,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
     };
 
     const formatTime = (timeString: string) => {
-        return timeString.slice(0, 5); // Remove seconds from HH:MM:SS
+        return timeString.slice(0, 5);
     };
 
     return (
@@ -98,7 +95,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white,
         borderRadius: 16,
         marginBottom: 16,
-        marginHorizontal: 4, // Reduced horizontal margin for VIPMonkey-like spacing
+        marginHorizontal: 4,
         shadowColor: Colors.black,
         shadowOffset: {
             width: 0,

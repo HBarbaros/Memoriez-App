@@ -1,6 +1,5 @@
 import { Colors } from '@/app/constants/colors';
 import * as Constants from 'expo-constants';
-import React from 'react';
 import {
   Alert,
   Pressable,
@@ -22,44 +21,37 @@ export default function SettingsScreen() {
     {
       id: 'profile',
       title: 'My Profile',
-      icon: '👤',
       description: 'Edit personal information and preferences',
     },
     {
       id: 'payments',
       title: 'Payment Methods',
-      icon: '💳',
       description: 'Manage cards and payment options',
     },
     {
       id: 'notifications',
       title: 'Notifications',
-      icon: '🔔',
       description: 'Push notifications and email settings',
     },
     {
       id: 'language',
       title: 'Language',
-      icon: '🌍',
       description: 'App language and region settings',
       value: 'English',
     },
     {
       id: 'privacy',
       title: 'Privacy & Security',
-      icon: '🔒',
       description: 'Account security and privacy controls',
     },
     {
       id: 'help',
       title: 'Help & Support',
-      icon: '❓',
       description: 'FAQ, contact support, and tutorials',
     },
     {
       id: 'about',
       title: 'About',
-      icon: 'ℹ️',
       description: 'App version, terms, and privacy policy',
       value: `v${appVersion}`,
     },
@@ -79,8 +71,8 @@ export default function SettingsScreen() {
             <Text style={styles.avatarText}>JD</Text>
           </View>
           <View style={styles.userInfo}>
-            <Text style={styles.userName}>John Doe</Text>
-            <Text style={styles.userEmail}>john.doe@example.com</Text>
+            <Text style={styles.userName}>Barbaros</Text>
+            <Text style={styles.userEmail}>barbaros.ozdogan@example.com</Text>
             <Pressable style={styles.editProfileButton}>
               <Text style={styles.editProfileText}>Edit Profile</Text>
             </Pressable>
@@ -96,7 +88,6 @@ export default function SettingsScreen() {
               onPress={() => handleMenuPress(item.title)}
             >
               <View style={styles.menuItemLeft}>
-                <Text style={styles.menuIcon}>{item.icon}</Text>
                 <View style={styles.menuTextContainer}>
                   <Text style={styles.menuTitle}>{item.title}</Text>
                   <Text style={styles.menuDescription}>{item.description}</Text>
@@ -226,10 +217,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-  },
-  menuIcon: {
-    fontSize: 20,
-    marginRight: 12,
   },
   menuTextContainer: {
     flex: 1,

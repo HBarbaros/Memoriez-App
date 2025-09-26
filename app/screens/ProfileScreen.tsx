@@ -1,8 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-// ProfileScreen: Shows user profile info
-// ...
 
 const ProfileScreen = () => {
     return (
