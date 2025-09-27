@@ -1,8 +1,13 @@
+import {
+    cartItemsAtom,
+    markAsPaidAtom,
+    removeFromCartAtom
+} from '@/app/store/paymentStore';
 import { Colors } from '@/lib/constants/colors';
 import { mockEvents } from '@/lib/data/mockEvents';
-import { PaymentItem, paymentStore } from '@/app/store/paymentStore';
 import { Event } from '@/lib/types/event';
-import React, { useEffect, useState } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useState } from 'react';
 import {
     Alert,
     FlatList,
@@ -15,21 +20,11 @@ import {
 } from 'react-native';
 
 export default function PaymentScreen() {
-    const [cartItems, setCartItems] = useState<PaymentItem[]>([]);
+    const cartItems = useAtomValue(cartItemsAtom);
+    const removeCartItem = useSetAtom(removeFromCartAtom);
+    const markAsPaid = useSetAtom(markAsPaidAtom);
+
     const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
-
-    useEffect(() => {
-        setCartItems(paymentStore.getCartItems());
-
-        const unsubscribe = paymentStore.subscribe(() => {
-            setCartItems(paymentStore.getCartItems());
-            setSelectedEvents(prev =>
-                prev.filter(id => paymentStore.isInCart(id))
-            );
-        });
-
-        return unsubscribe;
-    }, []);
 
     const getCartEventsWithDetails = () => {
         return cartItems.map(cartItem => {
@@ -63,7 +58,7 @@ export default function PaymentScreen() {
                     text: 'Remove',
                     style: 'destructive',
                     onPress: () => {
-                        paymentStore.removeFromCart(eventId);
+                        removeCartItem(eventId);
                         setSelectedEvents(prev => prev.filter(id => id !== eventId));
                     }
                 }
@@ -86,7 +81,7 @@ export default function PaymentScreen() {
                     text: 'Pay Now',
                     onPress: () => {
                         Alert.alert('Payment Successful!', 'Your payment has been processed.');
-                        paymentStore.markAsPaid(selectedEvents);
+                        markAsPaid(selectedEvents);
                         setSelectedEvents([]);
                     }
                 }

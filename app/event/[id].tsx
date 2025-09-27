@@ -1,9 +1,9 @@
+import { addToCartAtom } from '@/app/store/paymentStore';
 import { Colors } from '@/lib/constants/colors';
 import { mockEvents } from '@/lib/data/mockEvents';
-import { paymentStore } from '@/app/store/paymentStore';
 import { Event } from '@/lib/types/event';
 import { router, useLocalSearchParams } from 'expo-router';
-import React from 'react';
+import { useSetAtom } from 'jotai';
 import {
     Alert,
     Image,
@@ -17,8 +17,8 @@ import {
 
 export default function EventDetailScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
+    const addToCart = useSetAtom(addToCartAtom);
 
-    // Hitta event baserat på ID
     const event: Event | undefined = mockEvents.find(e => e.id === id);
 
     if (!event) {
@@ -50,12 +50,10 @@ export default function EventDetailScreen() {
 
     const handleRSVP = () => {
         if (!event.price) {
-            // Free event - direct RSVP
             Alert.alert('Success!', 'You have been added to the attendee list for this free event.');
             return;
         }
 
-        // Paid event - offer payment options
         Alert.alert(
             'RSVP Confirmation',
             `"${event.title}" costs $${event.price}. How would you like to proceed?`,
@@ -70,7 +68,7 @@ export default function EventDetailScreen() {
                 {
                     text: 'Pay Later',
                     onPress: () => {
-                        paymentStore.addToCart(event.id);
+                        addToCart(event.id);
                         Alert.alert(
                             'Added to Payment Queue',
                             'Event has been added to your payment list. You can pay later from the Payment tab.',
@@ -103,7 +101,6 @@ export default function EventDetailScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
-                {/* Hero Image */}
                 <View style={styles.imageContainer}>
                     <Image
                         source={{ uri: event.imageUrl || 'https://via.placeholder.com/400x300' }}
@@ -111,26 +108,21 @@ export default function EventDetailScreen() {
                         resizeMode="cover"
                     />
 
-                    {/* Back Button Overlay */}
                     <Pressable style={styles.backButtonOverlay} onPress={() => router.back()}>
                         <Text style={styles.backIcon}>←</Text>
                     </Pressable>
 
-                    {/* Category Badge Overlay */}
                     <View style={[styles.categoryBadgeOverlay, { backgroundColor: getCategoryColor(event.category) }]}>
                         <Text style={styles.categoryBadgeText}>{event.category}</Text>
                     </View>
                 </View>
 
-                {/* Content */}
                 <View style={styles.content}>
-                    {/* Title & Basic Info */}
                     <View style={styles.titleSection}>
                         <Text style={styles.title}>{event.title}</Text>
                         <Text style={styles.organizer}>Organized by {event.organizer}</Text>
                     </View>
 
-                    {/* Date & Time */}
                     <View style={styles.infoCard}>
                         <View style={styles.infoRow}>
                             <Text style={styles.infoIcon}>📅</Text>
@@ -146,7 +138,6 @@ export default function EventDetailScreen() {
                         </View>
                     </View>
 
-                    {/* Location */}
                     <View style={styles.infoCard}>
                         <View style={styles.infoRow}>
                             <Text style={styles.infoIcon}>📍</Text>
@@ -158,7 +149,6 @@ export default function EventDetailScreen() {
                         </View>
                     </View>
 
-                    {/* Price */}
                     {event.price && (
                         <View style={styles.infoCard}>
                             <View style={styles.infoRow}>
@@ -171,13 +161,11 @@ export default function EventDetailScreen() {
                         </View>
                     )}
 
-                    {/* Description */}
                     <View style={styles.descriptionSection}>
                         <Text style={styles.sectionTitle}>About This Event</Text>
                         <Text style={styles.description}>{event.description}</Text>
                     </View>
 
-                    {/* Attendees */}
                     <View style={styles.attendeesSection}>
                         <Text style={styles.sectionTitle}>Attendees</Text>
                         <View style={styles.attendeesInfo}>
@@ -192,7 +180,6 @@ export default function EventDetailScreen() {
                         </View>
                     </View>
 
-                    {/* Tags */}
                     {event.tags && event.tags.length > 0 && (
                         <View style={styles.tagsSection}>
                             <Text style={styles.sectionTitle}>Tags</Text>
@@ -206,7 +193,6 @@ export default function EventDetailScreen() {
                         </View>
                     )}
 
-                    {/* RSVP Button */}
                     <View style={styles.buttonSection}>
                         <Pressable style={styles.rsvpButton} onPress={handleRSVP}>
                             <Text style={styles.rsvpButtonText}>RSVP - I'll Attend</Text>
