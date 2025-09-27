@@ -29,15 +29,15 @@ export default function PaymentScreen() {
     const getCartEventsWithDetails = () => {
         return cartItems.map(cartItem => {
             const event = mockEvents.find(e => e.id === cartItem.eventId);
-            return event ? { ...event, addedDate: cartItem.addedDate } : null;
-        }).filter(Boolean) as (Event & { addedDate: string })[];
+            return event ? { ...event, addedDate: cartItem.addedDate, quantity: cartItem.quantity } : null;
+        }).filter(Boolean) as (Event & { addedDate: string; quantity: number })[];
     };
 
     const cartEventsWithDetails = getCartEventsWithDetails();
 
     const totalAmount = selectedEvents.reduce((total, eventId) => {
         const event = cartEventsWithDetails.find(e => e.id === eventId);
-        return total + (event?.price || 0);
+        return total + ((event?.price || 0) * (event?.quantity || 1));
     }, 0);
 
     const toggleEventSelection = (eventId: string) => {
@@ -89,7 +89,7 @@ export default function PaymentScreen() {
         );
     };
 
-    const renderCartItem = ({ item }: { item: Event & { addedDate: string } }) => {
+    const renderCartItem = ({ item }: { item: Event & { addedDate: string; quantity: number } }) => {
         const isSelected = selectedEvents.includes(item.id);
 
         return (
@@ -117,9 +117,14 @@ export default function PaymentScreen() {
                                 day: 'numeric'
                             })}
                         </Text>
-                        <Text style={styles.eventPrice}>
-                            ${item.price || 0}
-                        </Text>
+                        <View style={styles.priceRow}>
+                            <Text style={styles.eventPrice}>
+                                ${item.price || 0} × {item.quantity}
+                            </Text>
+                            <Text style={styles.totalPrice}>
+                                = ${((item.price || 0) * item.quantity)}
+                            </Text>
+                        </View>
                         <Text style={styles.addedDate}>
                             Added: {new Date(item.addedDate).toLocaleDateString()}
                         </Text>
@@ -295,11 +300,21 @@ const styles = StyleSheet.create({
         color: Colors.textSecondary,
         marginBottom: 2,
     },
+    priceRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 2,
+    },
     eventPrice: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: Colors.textSecondary,
+        marginRight: 8,
+    },
+    totalPrice: {
         fontSize: 16,
         fontWeight: 'bold',
         color: Colors.primary,
-        marginBottom: 2,
     },
     addedDate: {
         fontSize: 12,

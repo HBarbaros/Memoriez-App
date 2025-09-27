@@ -53,14 +53,14 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
 
                 <View style={styles.details}>
                     <Text style={styles.date}>
-                        📅 {formatDate(event.date)} • {formatTime(event.startTime)}
+                        {formatDate(event.date)} • {formatTime(event.startTime)}
                     </Text>
                     <Text style={styles.location}>
-                        📍 {event.location.name}
+                        {event.location.name}
                     </Text>
                     {event.price && (
                         <Text style={styles.price}>
-                            💰 ${event.price}
+                            ${event.price}
                         </Text>
                     )}
                 </View>

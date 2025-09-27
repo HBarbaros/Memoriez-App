@@ -30,6 +30,7 @@ export const mockEvents: Event[] = [
     attendeeCount: 1250,
     maxAttendees: 2000,
     tags: ['music', 'festival', 'outdoor', 'live'],
+    ageRestriction: '18+',
   },
   {
     id: '2',

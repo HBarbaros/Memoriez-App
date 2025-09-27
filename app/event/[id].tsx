@@ -7,6 +7,7 @@ import { useColorScheme } from '@/lib/hooks/use-color-scheme';
 import { Event } from '@/lib/types/event';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSetAtom } from 'jotai';
+import React from 'react';
 import {
     Alert,
     Image,
@@ -52,38 +53,29 @@ export default function EventDetailScreen() {
         return timeString.slice(0, 5);
     };
 
-    const handleRSVP = () => {
-        if (!event.price) {
-            Alert.alert('Success!', 'You have been added to the attendee list for this free event.');
-            return;
-        }
+    const [quantity, setQuantity] = React.useState(1);
 
+    const handleQuantityDecrease = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        }
+    };
+
+    const handleQuantityIncrease = () => {
+        setQuantity(quantity + 1);
+    };
+
+    const handlePurchase = () => {
+        const totalPrice = event.price! * quantity;
         Alert.alert(
-            'RSVP Confirmation',
-            `"${event.title}" costs $${event.price}. How would you like to proceed?`,
+            'Confirm Purchase',
+            `Buy ${quantity} ticket(s) for $${totalPrice}?`,
             [
                 { text: 'Cancel', style: 'cancel' },
                 {
-                    text: 'Pay Now',
+                    text: 'Buy Now',
                     onPress: () => {
-                        Alert.alert('Payment Successful!', 'Your payment has been processed and you\'re registered for the event.');
-                    }
-                },
-                {
-                    text: 'Pay Later',
-                    onPress: () => {
-                        addToCart(event.id);
-                        Alert.alert(
-                            'Added to Payment Queue',
-                            'Event has been added to your payment list. You can pay later from the Payment tab.',
-                            [
-                                { text: 'OK', style: 'default' },
-                                {
-                                    text: 'Go to Payment',
-                                    onPress: () => router.push('/(tabs)/payment')
-                                }
-                            ]
-                        );
+                        Alert.alert('Success!', `Payment successful! You bought ${quantity} ticket(s) for $${totalPrice}.`);
                     }
                 }
             ]
@@ -114,100 +106,126 @@ export default function EventDetailScreen() {
                     <View style={styles.headerSpacer} />
                 </View>
 
-                {/* Compact Image */}
-                <View style={styles.imageContainer}>
-                    <Image
-                        source={{ uri: event.imageUrl || 'https://via.placeholder.com/400x200' }}
-                        style={styles.compactImage}
-                        resizeMode="cover"
-                    />
-                    <View style={[styles.categoryBadge, { backgroundColor: getCategoryColor(event.category) }]}>
-                        <Text style={styles.categoryBadgeText}>{event.category}</Text>
-                    </View>
-                </View>
-
+                {/* Main Content */}
                 <View style={styles.content}>
+                    {/* Event Image Card */}
+                    <View style={styles.imageCard}>
+                        <Image
+                            source={{ uri: event.imageUrl || 'https://via.placeholder.com/400x200' }}
+                            style={styles.cardImage}
+                            resizeMode="cover"
+                        />
+                        <View style={[styles.categoryBadge, { backgroundColor: getCategoryColor(event.category) }]}>
+                            <Text style={styles.categoryBadgeText}>{event.category}</Text>
+                        </View>
+                    </View>
+                    {/* Event Title and Basic Info */}
                     <View style={styles.titleSection}>
                         <Text style={styles.title}>{event.title}</Text>
-                        <Text style={styles.organizer}>Organized by {event.organizer}</Text>
+                        <Text style={styles.organizer}>{event.organizer}</Text>
+                        <Text style={styles.date}>{formatDate(event.date)}</Text>
                     </View>
 
-                    <View style={styles.infoCard}>
-                        <View style={styles.infoRow}>
-                            <Text style={styles.infoIcon}>📅</Text>
-                            <View style={styles.infoContent}>
-                                <Text style={styles.infoLabel}>Date & Time</Text>
-                                <Text style={styles.infoValue}>
-                                    {formatDate(event.date)}
+                    {/* Price Display */}
+                    {event.price && (
+                        <View style={styles.priceSection}>
+                            <Text style={styles.priceValue}>${event.price}</Text>
+                        </View>
+                    )}
+
+
+
+                    {/* Event Details Cards */}
+                    <View style={styles.detailsSection}>
+                        {/* Age restriction - only show if exists */}
+                        {event.ageRestriction && (
+                            <View style={styles.detailCard}>
+                                <View style={styles.detailContent}>
+                                    <Text style={styles.detailLabel}>Age Restriction</Text>
+                                    <Text style={styles.detailValue}>{event.ageRestriction}</Text>
+                                </View>
+                            </View>
+                        )}
+
+                        {/* Price info */}
+                        <View style={styles.detailCard}>
+                            <View style={styles.detailContent}>
+                                <Text style={styles.detailLabel}>Price</Text>
+                                <Text style={styles.detailValue}>
+                                    {event.price ? `$${event.price}` : 'Free Entry'}
                                 </Text>
-                                <Text style={styles.infoSubValue}>
+                            </View>
+                        </View>
+
+                        {/* Location */}
+                        <View style={styles.detailCard}>
+                            <View style={styles.detailContent}>
+                                <Text style={styles.detailLabel}>Venue</Text>
+                                <Text style={styles.detailValue}>{event.location.name}</Text>
+                                <Text style={styles.detailSubValue}>{event.location.address}</Text>
+                            </View>
+                        </View>
+
+                        {/* Date and Time */}
+                        <View style={styles.detailCard}>
+                            <View style={styles.detailContent}>
+                                <Text style={styles.detailLabel}>Date & Time</Text>
+                                <Text style={styles.detailValue}>{formatDate(event.date)}</Text>
+                                <Text style={styles.detailSubValue}>
                                     {formatTime(event.startTime)} - {formatTime(event.endTime)}
                                 </Text>
                             </View>
                         </View>
-                    </View>
 
-                    <View style={styles.infoCard}>
-                        <View style={styles.infoRow}>
-                            <Text style={styles.infoIcon}>📍</Text>
-                            <View style={styles.infoContent}>
-                                <Text style={styles.infoLabel}>Location</Text>
-                                <Text style={styles.infoValue}>{event.location.name}</Text>
-                                <Text style={styles.infoSubValue}>{event.location.address}</Text>
+                        {/* Organizer */}
+                        <View style={styles.detailCard}>
+                            <View style={styles.detailContent}>
+                                <Text style={styles.detailLabel}>Organizer</Text>
+                                <Text style={styles.detailValue}>{event.organizer}</Text>
                             </View>
                         </View>
-                    </View>
 
-                    {event.price && (
-                        <View style={styles.infoCard}>
-                            <View style={styles.infoRow}>
-                                <Text style={styles.infoIcon}>💰</Text>
-                                <View style={styles.infoContent}>
-                                    <Text style={styles.infoLabel}>Price</Text>
-                                    <Text style={styles.priceValue}>${event.price}</Text>
+                        {/* Description if exists */}
+                        {event.description && (
+                            <View style={styles.descriptionCard}>
+                                <View style={styles.detailContent}>
+                                    <Text style={styles.detailLabel}>About This Event</Text>
+                                    <Text style={styles.descriptionText}>{event.description}</Text>
                                 </View>
                             </View>
-                        </View>
-                    )}
-
-                    <View style={styles.descriptionSection}>
-                        <Text style={styles.sectionTitle}>About This Event</Text>
-                        <Text style={styles.description}>{event.description}</Text>
+                        )}
                     </View>
 
-                    <View style={styles.attendeesSection}>
-                        <Text style={styles.sectionTitle}>Attendees</Text>
-                        <View style={styles.attendeesInfo}>
-                            <Text style={styles.attendeesCount}>
-                                {event.attendeeCount} people attending
-                            </Text>
-                            {event.maxAttendees && (
-                                <Text style={styles.attendeesMax}>
-                                    {event.maxAttendees - event.attendeeCount} spots left
-                                </Text>
+                    {/* Bottom Action Section - Quantity + Buttons */}
+                    <View style={styles.bottomActionSection}>
+                        {/* Quantity Selector */}
+                        <View style={styles.quantitySelector}>
+                            <Pressable style={styles.quantityButton} onPress={handleQuantityDecrease}>
+                                <Text style={styles.quantityButtonText}>-</Text>
+                            </Pressable>
+                            <Text style={styles.quantityText}>{quantity}</Text>
+                            <Pressable style={styles.quantityButton} onPress={handleQuantityIncrease}>
+                                <Text style={styles.quantityButtonText}>+</Text>
+                            </Pressable>
+                        </View>
+
+                        {/* Action Buttons */}
+                        <View style={styles.actionButtons}>
+                            <Pressable style={styles.addButton} onPress={() => {
+                                addToCart({ eventId: event.id, quantity });
+                                Alert.alert('Added!', `${quantity} ticket(s) added to cart.`);
+                            }}>
+                                <Text style={styles.addButtonText}>ADD</Text>
+                            </Pressable>
+
+                            {event.price && (
+                                <Pressable style={styles.buyButton} onPress={handlePurchase}>
+                                    <Text style={styles.buyButtonText}>
+                                        BUY - ${event.price * quantity}
+                                    </Text>
+                                </Pressable>
                             )}
                         </View>
-                    </View>
-
-                    {event.tags && event.tags.length > 0 && (
-                        <View style={styles.tagsSection}>
-                            <Text style={styles.sectionTitle}>Tags</Text>
-                            <View style={styles.tagsContainer}>
-                                {event.tags.map((tag, index) => (
-                                    <View key={index} style={styles.tag}>
-                                        <Text style={styles.tagText}>#{tag}</Text>
-                                    </View>
-                                ))}
-                            </View>
-                        </View>
-                    )}
-
-                    <View style={styles.buttonSection}>
-                        <Pressable style={styles.addButton} onPress={handleRSVP}>
-                            <Text style={styles.addButtonText}>
-                                {event.price ? `Add - $${event.price}` : 'Add to Calendar'}
-                            </Text>
-                        </Pressable>
                     </View>
                 </View>
             </ScrollView>
@@ -266,10 +284,12 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     backButton: {
-        backgroundColor: Colors.primary,
-        paddingHorizontal: 20,
-        paddingVertical: 12,
-        borderRadius: 8,
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     backButtonText: {
         color: Colors.white,
@@ -279,37 +299,48 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingVertical: 15,
+        paddingHorizontal: 16,
+        paddingVertical: 10,
         backgroundColor: Colors.primary,
     },
     headerTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        fontSize: 16,
+        fontWeight: '600',
         color: Colors.white,
     },
     headerSpacer: {
-        width: 40,
+        width: 32,
     },
     backIcon: {
         color: Colors.white,
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 'bold',
     },
-    imageContainer: {
+    imageCard: {
+        backgroundColor: Colors.surface,
+        borderRadius: 12,
+        padding: 0,
+        marginBottom: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
         position: 'relative',
+        overflow: 'hidden',
     },
-    compactImage: {
+    cardImage: {
         width: '100%',
-        height: 200, // Compact size as requested
+        height: 160, // Smaller inside card
+        borderRadius: 12,
     },
     categoryBadge: {
         position: 'absolute',
-        top: 15,
-        right: 15,
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 15,
+        top: 12,
+        right: 12,
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 12,
     },
     categoryBadgeText: {
         color: Colors.white,
@@ -317,134 +348,157 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     content: {
-        padding: 20,
+        padding: 16,
+        paddingTop: 20,
         paddingBottom: 100, // Extra space for tab bar
     },
     titleSection: {
-        marginBottom: 24,
+        alignItems: 'center',
+        marginBottom: 20,
     },
     title: {
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: 'bold',
         color: Colors.text,
-        marginBottom: 8,
+        textAlign: 'center',
+        marginBottom: 5,
     },
     organizer: {
-        fontSize: 16,
+        fontSize: 14,
         color: Colors.textSecondary,
-        fontStyle: 'italic',
+        marginBottom: 5,
     },
-    infoCard: {
+    date: {
+        fontSize: 14,
+        color: Colors.textSecondary,
+    },
+    // Price Section
+    priceSection: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    priceValue: {
+        fontSize: 36,
+        fontWeight: 'bold',
+        color: Colors.text,
+    },
+    // Bottom Action Section
+    bottomActionSection: {
+        marginTop: 25,
+        marginBottom: 20,
+        paddingTop: 20,
+        borderTopWidth: 1,
+        borderTopColor: Colors.border,
+    },
+    quantitySelector: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 15,
+    },
+    quantityButton: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: Colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    quantityButtonText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: Colors.white,
+    },
+    quantityText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: Colors.text,
+        marginHorizontal: 20,
+    },
+    actionButtons: {
+        flexDirection: 'row',
+        gap: 12,
+    },
+    addButton: {
+        flex: 1,
+        backgroundColor: Colors.surface,
+        borderWidth: 2,
+        borderColor: Colors.primary,
+        borderRadius: 12,
+        paddingVertical: 14,
+        alignItems: 'center',
+    },
+    addButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: Colors.primary,
+    },
+    buyButton: {
+        flex: 2,
+        backgroundColor: Colors.primary,
+        borderRadius: 12,
+        paddingVertical: 14,
+        alignItems: 'center',
+    },
+    buyButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: Colors.white,
+    },
+    // Details Section - Modern Card Style
+    detailsSection: {
+        marginTop: 10,
+    },
+    detailCard: {
         backgroundColor: Colors.surface,
         borderRadius: 12,
         padding: 16,
         marginBottom: 12,
-        borderWidth: 1,
-        borderColor: Colors.border,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
     },
-    infoRow: {
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-    },
-    infoIcon: {
-        fontSize: 20,
-        marginRight: 12,
-        marginTop: 2,
-    },
-    infoContent: {
+    detailContent: {
         flex: 1,
     },
-    infoLabel: {
+    detailLabel: {
         fontSize: 12,
+        fontWeight: '600',
         color: Colors.textSecondary,
         textTransform: 'uppercase',
         letterSpacing: 0.5,
         marginBottom: 4,
     },
-    infoValue: {
+    detailValue: {
         fontSize: 16,
         fontWeight: '600',
         color: Colors.text,
         marginBottom: 2,
     },
-    infoSubValue: {
+    detailSubValue: {
         fontSize: 14,
         color: Colors.textSecondary,
     },
-    priceValue: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: Colors.primary,
-    },
-    descriptionSection: {
-        marginTop: 24,
-        marginBottom: 24,
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: Colors.text,
-        marginBottom: 12,
-    },
-    description: {
-        fontSize: 16,
-        lineHeight: 24,
-        color: Colors.text,
-    },
-    attendeesSection: {
-        marginBottom: 24,
-    },
-    attendeesInfo: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    attendeesCount: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: Colors.text,
-    },
-    attendeesMax: {
-        fontSize: 14,
-        color: Colors.primary,
-        fontWeight: '500',
-    },
-    tagsSection: {
-        marginBottom: 24,
-    },
-    tagsContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 8,
-    },
-    tag: {
+    descriptionCard: {
         backgroundColor: Colors.surface,
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: Colors.border,
-    },
-    tagText: {
-        fontSize: 12,
-        color: Colors.textSecondary,
-        fontWeight: '500',
-    },
-    buttonSection: {
-        marginTop: 32,
-        marginBottom: 32,
-    },
-    addButton: {
-        backgroundColor: Colors.primary,
         borderRadius: 12,
-        paddingVertical: 16,
-        alignItems: 'center',
+        padding: 16,
+        marginBottom: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
     },
-    addButtonText: {
-        color: Colors.white,
-        fontSize: 18,
-        fontWeight: 'bold',
+    descriptionText: {
+        fontSize: 14,
+        lineHeight: 20,
+        color: Colors.text,
     },
+
+
     // Tab Navigation Styles - Exactly matching native tab bar
     tabBar: {
         flexDirection: 'row',

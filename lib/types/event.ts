@@ -20,6 +20,7 @@ export interface Event {
   attendeeCount: number;
   maxAttendees?: number;
   tags: string[];
+  ageRestriction?: string; // Optional age restriction like "18+", "21+", etc.
 }
 
 export interface Category {
