@@ -1,6 +1,9 @@
 import { addToCartAtom } from '@/app/store/paymentStore';
+import { IconSymbol } from '@/lib/components/ui/icon-symbol';
 import { Colors } from '@/lib/constants/colors';
+import { Colors as ThemeColors } from '@/lib/constants/theme';
 import { mockEvents } from '@/lib/data/mockEvents';
+import { useColorScheme } from '@/lib/hooks/use-color-scheme';
 import { Event } from '@/lib/types/event';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSetAtom } from 'jotai';
@@ -18,6 +21,7 @@ import {
 export default function EventDetailScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const addToCart = useSetAtom(addToCartAtom);
+    const colorScheme = useColorScheme();
 
     const event: Event | undefined = mockEvents.find(e => e.id === id);
 
@@ -101,18 +105,23 @@ export default function EventDetailScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.imageContainer}>
-                    <Image
-                        source={{ uri: event.imageUrl || 'https://via.placeholder.com/400x300' }}
-                        style={styles.heroImage}
-                        resizeMode="cover"
-                    />
-
-                    <Pressable style={styles.backButtonOverlay} onPress={() => router.back()}>
+                {/* Compact Header */}
+                <View style={styles.headerContainer}>
+                    <Pressable style={styles.backButton} onPress={() => router.back()}>
                         <Text style={styles.backIcon}>←</Text>
                     </Pressable>
+                    <Text style={styles.headerTitle}>Event Details</Text>
+                    <View style={styles.headerSpacer} />
+                </View>
 
-                    <View style={[styles.categoryBadgeOverlay, { backgroundColor: getCategoryColor(event.category) }]}>
+                {/* Compact Image */}
+                <View style={styles.imageContainer}>
+                    <Image
+                        source={{ uri: event.imageUrl || 'https://via.placeholder.com/400x200' }}
+                        style={styles.compactImage}
+                        resizeMode="cover"
+                    />
+                    <View style={[styles.categoryBadge, { backgroundColor: getCategoryColor(event.category) }]}>
                         <Text style={styles.categoryBadgeText}>{event.category}</Text>
                     </View>
                 </View>
@@ -194,12 +203,48 @@ export default function EventDetailScreen() {
                     )}
 
                     <View style={styles.buttonSection}>
-                        <Pressable style={styles.rsvpButton} onPress={handleRSVP}>
-                            <Text style={styles.rsvpButtonText}>RSVP - I'll Attend</Text>
+                        <Pressable style={styles.addButton} onPress={handleRSVP}>
+                            <Text style={styles.addButtonText}>
+                                {event.price ? `Add - $${event.price}` : 'Add to Calendar'}
+                            </Text>
                         </Pressable>
                     </View>
                 </View>
             </ScrollView>
+
+            {/* Bottom Tab Navigation - Same icons as Home/Settings */}
+            <View style={[styles.tabBar, { backgroundColor: ThemeColors[colorScheme ?? 'light'].background }]}>
+                <Pressable style={styles.tabItem} onPress={() => router.push('/(tabs)')}>
+                    <IconSymbol
+                        name="house.fill"
+                        size={28}
+                        color={ThemeColors[colorScheme ?? 'light'].tabIconDefault}
+                    />
+                    <Text style={[styles.tabText, { color: ThemeColors[colorScheme ?? 'light'].tabIconDefault }]}>
+                        Home
+                    </Text>
+                </Pressable>
+                <Pressable style={styles.tabItem} onPress={() => router.push('/(tabs)/payment')}>
+                    <IconSymbol
+                        name="creditcard.fill"
+                        size={28}
+                        color={ThemeColors[colorScheme ?? 'light'].tabIconDefault}
+                    />
+                    <Text style={[styles.tabText, { color: ThemeColors[colorScheme ?? 'light'].tabIconDefault }]}>
+                        Payment
+                    </Text>
+                </Pressable>
+                <Pressable style={styles.tabItem} onPress={() => router.push('/(tabs)/explore')}>
+                    <IconSymbol
+                        name="gearshape.fill"
+                        size={28}
+                        color={ThemeColors[colorScheme ?? 'light'].tabIconDefault}
+                    />
+                    <Text style={[styles.tabText, { color: ThemeColors[colorScheme ?? 'light'].tabIconDefault }]}>
+                        Settings
+                    </Text>
+                </Pressable>
+            </View>
         </SafeAreaView>
     );
 }
@@ -230,33 +275,38 @@ const styles = StyleSheet.create({
         color: Colors.white,
         fontWeight: '600',
     },
-    imageContainer: {
-        position: 'relative',
-    },
-    heroImage: {
-        width: '100%',
-        height: 300,
-    },
-    backButtonOverlay: {
-        position: 'absolute',
-        top: 50,
-        left: 20,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        borderRadius: 20,
-        width: 40,
-        height: 40,
-        justifyContent: 'center',
+    headerContainer: {
+        flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        paddingVertical: 15,
+        backgroundColor: Colors.primary,
+    },
+    headerTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: Colors.white,
+    },
+    headerSpacer: {
+        width: 40,
     },
     backIcon: {
         color: Colors.white,
         fontSize: 20,
         fontWeight: 'bold',
     },
-    categoryBadgeOverlay: {
+    imageContainer: {
+        position: 'relative',
+    },
+    compactImage: {
+        width: '100%',
+        height: 200, // Compact size as requested
+    },
+    categoryBadge: {
         position: 'absolute',
-        top: 50,
-        right: 20,
+        top: 15,
+        right: 15,
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 15,
@@ -268,6 +318,7 @@ const styles = StyleSheet.create({
     },
     content: {
         padding: 20,
+        paddingBottom: 100, // Extra space for tab bar
     },
     titleSection: {
         marginBottom: 24,
@@ -383,15 +434,42 @@ const styles = StyleSheet.create({
         marginTop: 32,
         marginBottom: 32,
     },
-    rsvpButton: {
+    addButton: {
         backgroundColor: Colors.primary,
         borderRadius: 12,
         paddingVertical: 16,
         alignItems: 'center',
     },
-    rsvpButtonText: {
+    addButtonText: {
         color: Colors.white,
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    // Tab Navigation Styles - Exactly matching native tab bar
+    tabBar: {
+        flexDirection: 'row',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: '#ffffff',
+        borderTopWidth: 0.5,
+        borderTopColor: 'rgba(0, 0, 0, 0.3)',
+        paddingBottom: 34,
+        paddingTop: 5,
+        height: 83,
+    },
+    tabItem: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 7,
+        paddingBottom: 5,
+    },
+    tabText: {
+        fontSize: 10,
+        fontWeight: '500',
+        marginTop: 1,
+        textAlign: 'center',
     },
 });
