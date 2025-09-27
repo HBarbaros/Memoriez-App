@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Colors } from '../constants/colors';
 import { Event } from '../types/event';
@@ -10,6 +10,8 @@ interface EventCardProps {
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
+    const [imageError, setImageError] = useState(false);
+
     const handlePress = () => {
         if (onPress) {
             onPress();
@@ -32,9 +34,10 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
     return (
         <Pressable style={styles.container} onPress={handlePress}>
             <Image
-                source={{ uri: event.imageUrl || 'https://via.placeholder.com/300x200' }}
+                source={{ uri: imageError ? 'https://picsum.photos/300/200' : (event.imageUrl || 'https://picsum.photos/300/200') }}
                 style={styles.image}
                 resizeMode="cover"
+                onError={() => setImageError(true)}
             />
 
             <View style={styles.content}>

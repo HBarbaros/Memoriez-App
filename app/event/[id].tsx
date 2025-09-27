@@ -7,7 +7,7 @@ import { useColorScheme } from '@/lib/hooks/use-color-scheme';
 import { Event } from '@/lib/types/event';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSetAtom } from 'jotai';
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Alert,
     Image,
@@ -23,6 +23,7 @@ export default function EventDetailScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const addToCart = useSetAtom(addToCartAtom);
     const colorScheme = useColorScheme();
+    const [imageError, setImageError] = useState(false);
 
     const event: Event | undefined = mockEvents.find(e => e.id === id);
 
@@ -111,9 +112,10 @@ export default function EventDetailScreen() {
                     {/* Event Image Card */}
                     <View style={styles.imageCard}>
                         <Image
-                            source={{ uri: event.imageUrl || 'https://via.placeholder.com/400x200' }}
+                            source={{ uri: imageError ? 'https://picsum.photos/400/200' : (event.imageUrl || 'https://picsum.photos/400/200') }}
                             style={styles.cardImage}
                             resizeMode="cover"
+                            onError={() => setImageError(true)}
                         />
                         <View style={[styles.categoryBadge, { backgroundColor: getCategoryColor(event.category) }]}>
                             <Text style={styles.categoryBadgeText}>{event.category}</Text>
