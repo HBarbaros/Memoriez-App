@@ -1,7 +1,7 @@
 import { Colors } from '@/lib/constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useRef, useState } from 'react';
-import { Dimensions, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Dimensions, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
@@ -38,7 +38,6 @@ export const FilterModal: React.FC<FilterModalProps> = ({
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [customCity, setCustomCity] = useState('');
 
-    // Modal visibility states - inline dropdown'lar için
     const [expandedSection, setExpandedSection] = useState<string | null>(null);
     const scrollViewRef = useRef<ScrollView>(null);
 
@@ -102,18 +101,22 @@ export const FilterModal: React.FC<FilterModalProps> = ({
         setCustomCity('');
         setExpandedSection(null);
 
-        // Reset location filter
         onLocationFilterChange('all');
 
-        // Call the parent clear function
         onClearFilters();
     };
+    const handleModalClose = () => {
+        // Reset expanded sections when modal closes
+        setExpandedSection(null);
+        onClose();
+    };
+
     return (
         <Modal
             visible={visible}
             animationType="slide"
             presentationStyle="pageSheet"
-            onRequestClose={onClose}
+            onRequestClose={handleModalClose}
         >
             <KeyboardAvoidingView
                 style={styles.modalContainer}
@@ -128,7 +131,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                     <SafeAreaView>
                         <View style={styles.modalHeaderContent}>
                             <Text style={styles.modalTitle}>Filters</Text>
-                            <Pressable style={styles.closeButton} onPress={onClose}>
+                            <Pressable style={styles.closeButton} onPress={handleModalClose}>
                                 <Text style={styles.closeButtonText}>×</Text>
                             </Pressable>
                         </View>
@@ -140,7 +143,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                     style={styles.modalContent}
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps="handled"
-                    keyboardDismissMode="interactive"
+                    keyboardDismissMode="on-drag"
                 >
                     {/* Date Selector - Modern */}
                     <View style={styles.section}>
@@ -223,6 +226,8 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                     value={customDateRange.from}
                                                     onChangeText={(text) => setCustomDateRange({ ...customDateRange, from: text })}
                                                     placeholderTextColor="#94a3b8"
+                                                    returnKeyType="next"
+                                                    blurOnSubmit={false}
                                                     onFocus={() => {
                                                         setTimeout(() => {
                                                             scrollViewRef.current?.scrollTo({ y: 200, animated: true });
@@ -238,6 +243,8 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                     value={customDateRange.to}
                                                     onChangeText={(text) => setCustomDateRange({ ...customDateRange, to: text })}
                                                     placeholderTextColor="#94a3b8"
+                                                    returnKeyType="done"
+                                                    onSubmitEditing={Keyboard.dismiss}
                                                     onFocus={() => {
                                                         setTimeout(() => {
                                                             scrollViewRef.current?.scrollTo({ y: 200, animated: true });
@@ -418,6 +425,8 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                     onChangeText={(text) => setCustomPriceRange({ ...customPriceRange, min: text })}
                                                     keyboardType="numeric"
                                                     placeholderTextColor="#94a3b8"
+                                                    returnKeyType="next"
+                                                    blurOnSubmit={false}
                                                 />
                                             </View>
                                             <View style={styles.modernInputField}>
@@ -429,6 +438,8 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                     onChangeText={(text) => setCustomPriceRange({ ...customPriceRange, max: text })}
                                                     keyboardType="numeric"
                                                     placeholderTextColor="#94a3b8"
+                                                    returnKeyType="done"
+                                                    onSubmitEditing={Keyboard.dismiss}
                                                 />
                                             </View>
                                         </View>
@@ -519,6 +530,8 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                     value={customCity}
                                                     onChangeText={setCustomCity}
                                                     placeholderTextColor="#94a3b8"
+                                                    returnKeyType="done"
+                                                    onSubmitEditing={Keyboard.dismiss}
                                                 />
                                             </View>
                                         </View>
@@ -598,7 +611,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
 
                     {/* Action Buttons */}
                     <View style={styles.actions}>
-                        <Pressable style={styles.applyButton} onPress={onClose}>
+                        <Pressable style={styles.applyButton} onPress={handleModalClose}>
                             <Text style={styles.applyButtonText}>Apply Filters</Text>
                         </Pressable>
 

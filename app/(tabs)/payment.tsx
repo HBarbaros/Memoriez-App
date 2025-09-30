@@ -12,10 +12,16 @@ import {
     Alert,
     FlatList,
     Image,
+    Keyboard,
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
     Pressable,
     SafeAreaView,
+    ScrollView,
     StyleSheet,
     Text,
+    TextInput,
     View
 } from 'react-native';
 
@@ -25,6 +31,20 @@ export default function PaymentScreen() {
     const markAsPaid = useSetAtom(markAsPaidAtom);
 
     const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
+    const [showPaymentForm, setShowPaymentForm] = useState(false);
+
+    // Payment form states
+    const [paymentForm, setPaymentForm] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        cardNumber: '',
+        expiryDate: '',
+        cvv: '',
+        address: '',
+        city: '',
+        zipCode: ''
+    });
 
     const getCartEventsWithDetails = () => {
         return cartItems.map(cartItem => {
@@ -72,21 +92,36 @@ export default function PaymentScreen() {
             return;
         }
 
-        Alert.alert(
-            'Confirm Payment',
-            `Pay $${totalAmount} for ${selectedEvents.length} event(s)?`,
-            [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                    text: 'Pay Now',
-                    onPress: () => {
-                        Alert.alert('Payment Successful!', 'Your payment has been processed.');
-                        markAsPaid(selectedEvents);
-                        setSelectedEvents([]);
-                    }
-                }
-            ]
-        );
+        // Show payment form instead of direct payment
+        setShowPaymentForm(true);
+    };
+
+    const handlePaymentSubmit = () => {
+        // Validate form
+        if (!paymentForm.firstName || !paymentForm.lastName || !paymentForm.email ||
+            !paymentForm.cardNumber || !paymentForm.expiryDate || !paymentForm.cvv) {
+            Alert.alert('Missing Information', 'Please fill in all required fields.');
+            return;
+        }
+
+        // Process payment
+        Alert.alert('Payment Successful!', 'Your payment has been processed.');
+        markAsPaid(selectedEvents);
+        setSelectedEvents([]);
+        setShowPaymentForm(false);
+
+        // Reset form
+        setPaymentForm({
+            firstName: '',
+            lastName: '',
+            email: '',
+            cardNumber: '',
+            expiryDate: '',
+            cvv: '',
+            address: '',
+            city: '',
+            zipCode: ''
+        });
     };
 
     const renderCartItem = ({ item }: { item: Event & { addedDate: string; quantity: number } }) => {
@@ -195,6 +230,193 @@ export default function PaymentScreen() {
                     </View>
                 </>
             )}
+
+            {/* Payment Form Modal */}
+            <Modal
+                visible={showPaymentForm}
+                animationType="slide"
+                presentationStyle="pageSheet"
+                onRequestClose={() => setShowPaymentForm(false)}
+            >
+                <KeyboardAvoidingView
+                    style={styles.modalContainer}
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+                >
+                    <SafeAreaView style={styles.modalContainer}>
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.modalTitle}>Payment Information</Text>
+                            <Pressable
+                                style={styles.closeButton}
+                                onPress={() => setShowPaymentForm(false)}
+                            >
+                                <Text style={styles.closeButtonText}>×</Text>
+                            </Pressable>
+                        </View>
+
+                        <ScrollView
+                            style={styles.formContainer}
+                            showsVerticalScrollIndicator={false}
+                            keyboardShouldPersistTaps="handled"
+                            keyboardDismissMode="on-drag"
+                            contentContainerStyle={styles.formContentContainer}
+                        >
+                            {/* Personal Information */}
+                            <View style={styles.formSection}>
+                                <Text style={styles.sectionTitle}>Personal Information</Text>
+
+                                <View style={styles.inputRow}>
+                                    <View style={styles.inputField}>
+                                        <Text style={styles.inputLabel}>First Name *</Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            value={paymentForm.firstName}
+                                            onChangeText={(text) => setPaymentForm({ ...paymentForm, firstName: text })}
+                                            placeholder="John"
+                                            returnKeyType="next"
+                                            blurOnSubmit={false}
+                                        />
+                                    </View>
+                                    <View style={styles.inputField}>
+                                        <Text style={styles.inputLabel}>Last Name *</Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            value={paymentForm.lastName}
+                                            onChangeText={(text) => setPaymentForm({ ...paymentForm, lastName: text })}
+                                            placeholder="Doe"
+                                            returnKeyType="next"
+                                            blurOnSubmit={false}
+                                        />
+                                    </View>
+                                </View>
+
+                                <View style={styles.inputField}>
+                                    <Text style={styles.inputLabel}>Email *</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        value={paymentForm.email}
+                                        onChangeText={(text) => setPaymentForm({ ...paymentForm, email: text })}
+                                        placeholder="john.doe@email.com"
+                                        keyboardType="email-address"
+                                        returnKeyType="next"
+                                        blurOnSubmit={false}
+                                        autoCapitalize="none"
+                                    />
+                                </View>
+                            </View>
+
+                            {/* Payment Information */}
+                            <View style={styles.formSection}>
+                                <Text style={styles.sectionTitle}>Payment Information</Text>
+
+                                <View style={styles.inputField}>
+                                    <Text style={styles.inputLabel}>Card Number *</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        value={paymentForm.cardNumber}
+                                        onChangeText={(text) => setPaymentForm({ ...paymentForm, cardNumber: text })}
+                                        placeholder="1234 5678 9012 3456"
+                                        keyboardType="numeric"
+                                        returnKeyType="next"
+                                        blurOnSubmit={false}
+                                    />
+                                </View>
+
+                                <View style={styles.inputRow}>
+                                    <View style={styles.inputField}>
+                                        <Text style={styles.inputLabel}>Expiry Date *</Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            value={paymentForm.expiryDate}
+                                            onChangeText={(text) => setPaymentForm({ ...paymentForm, expiryDate: text })}
+                                            placeholder="MM/YY"
+                                            returnKeyType="next"
+                                            blurOnSubmit={false}
+                                        />
+                                    </View>
+                                    <View style={styles.inputField}>
+                                        <Text style={styles.inputLabel}>CVV *</Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            value={paymentForm.cvv}
+                                            onChangeText={(text) => setPaymentForm({ ...paymentForm, cvv: text })}
+                                            placeholder="123"
+                                            keyboardType="numeric"
+                                            returnKeyType="next"
+                                            blurOnSubmit={false}
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+
+                            {/* Billing Address */}
+                            <View style={styles.formSection}>
+                                <Text style={styles.sectionTitle}>Billing Address</Text>
+
+                                <View style={styles.inputField}>
+                                    <Text style={styles.inputLabel}>Address</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        value={paymentForm.address}
+                                        onChangeText={(text) => setPaymentForm({ ...paymentForm, address: text })}
+                                        placeholder="123 Main Street"
+                                        returnKeyType="next"
+                                        blurOnSubmit={false}
+                                    />
+                                </View>
+
+                                <View style={styles.inputRow}>
+                                    <View style={styles.inputField}>
+                                        <Text style={styles.inputLabel}>City</Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            value={paymentForm.city}
+                                            onChangeText={(text) => setPaymentForm({ ...paymentForm, city: text })}
+                                            placeholder="Stockholm"
+                                            returnKeyType="next"
+                                            blurOnSubmit={false}
+                                        />
+                                    </View>
+                                    <View style={styles.inputField}>
+                                        <Text style={styles.inputLabel}>Zip Code</Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            value={paymentForm.zipCode}
+                                            onChangeText={(text) => setPaymentForm({ ...paymentForm, zipCode: text })}
+                                            placeholder="12345"
+                                            keyboardType="numeric"
+                                            returnKeyType="done"
+                                            onSubmitEditing={Keyboard.dismiss}
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+
+                            {/* Order Summary */}
+                            <View style={styles.formSection}>
+                                <Text style={styles.sectionTitle}>Order Summary</Text>
+                                <View style={styles.summaryCard}>
+                                    <Text style={styles.summaryText}>
+                                        {selectedEvents.length} event(s) selected
+                                    </Text>
+                                    <Text style={styles.summaryAmountModal}>
+                                        Total: ${totalAmount}
+                                    </Text>
+                                </View>
+                            </View>
+                        </ScrollView>
+
+                        <View style={styles.modalActions}>
+                            <Pressable style={styles.cancelButton} onPress={() => setShowPaymentForm(false)}>
+                                <Text style={styles.cancelButtonText}>Cancel</Text>
+                            </Pressable>
+                            <Pressable style={styles.submitButton} onPress={handlePaymentSubmit}>
+                                <Text style={styles.submitButtonText}>Complete Payment</Text>
+                            </Pressable>
+                        </View>
+                    </SafeAreaView>
+                </KeyboardAvoidingView>
+            </Modal>
         </SafeAreaView>
     );
 }
@@ -380,5 +602,140 @@ const styles = StyleSheet.create({
     },
     payButtonTextDisabled: {
         color: Colors.gray[500],
+    },
+    // Payment Form Modal Styles
+    modalContainer: {
+        flex: 1,
+        backgroundColor: Colors.background,
+    },
+    modalHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: Colors.border,
+    },
+    modalTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: Colors.text,
+    },
+    closeButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 8,
+        backgroundColor: Colors.surface,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    closeButtonText: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: Colors.textSecondary,
+    },
+    formContainer: {
+        flex: 1,
+        paddingHorizontal: 20,
+    },
+    formContentContainer: {
+        paddingBottom: 20,
+    },
+    formSection: {
+        marginBottom: 24,
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: Colors.text,
+        marginBottom: 16,
+    },
+    inputRow: {
+        flexDirection: 'row',
+        gap: 12,
+    },
+    inputField: {
+        flex: 1,
+        marginBottom: 16,
+    },
+    inputLabel: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: Colors.text,
+        marginBottom: 8,
+    },
+    input: {
+        backgroundColor: Colors.white,
+        borderRadius: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 16,
+        fontSize: 16,
+        color: Colors.text,
+        borderWidth: 1,
+        borderColor: Colors.border,
+        shadowColor: Colors.black,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
+    },
+    summaryCard: {
+        backgroundColor: Colors.white,
+        borderRadius: 12,
+        padding: 16,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        shadowColor: Colors.black,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
+    },
+    summaryText: {
+        fontSize: 16,
+        color: Colors.text,
+        fontWeight: '500',
+    },
+    summaryAmountModal: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: Colors.primary,
+    },
+    modalActions: {
+        flexDirection: 'row',
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        gap: 12,
+        borderTopWidth: 1,
+        borderTopColor: Colors.border,
+    },
+    cancelButton: {
+        flex: 1,
+        backgroundColor: Colors.white,
+        borderWidth: 1,
+        borderColor: Colors.textSecondary,
+        borderRadius: 12,
+        paddingVertical: 16,
+        alignItems: 'center',
+    },
+    cancelButtonText: {
+        color: Colors.textSecondary,
+        fontSize: 16,
+        fontWeight: '500',
+    },
+    submitButton: {
+        flex: 2,
+        backgroundColor: Colors.primary,
+        borderRadius: 12,
+        paddingVertical: 16,
+        alignItems: 'center',
+    },
+    submitButtonText: {
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: '500',
     },
 });

@@ -67,16 +67,18 @@ export default function EventDetailScreen() {
     };
 
     const handlePurchase = () => {
-        const totalPrice = event.price! * quantity;
+        // Add to cart and navigate to payment
+        addToCart({ eventId: event.id, quantity });
+        setQuantity(1); // Reset quantity
+
         Alert.alert(
-            'Confirm Purchase',
-            `Buy ${quantity} ticket(s) for $${totalPrice}?`,
+            'Added to Payment',
+            `${quantity} ticket(s) added to payment queue. Redirecting to payment page...`,
             [
-                { text: 'Cancel', style: 'cancel' },
                 {
-                    text: 'Buy Now',
+                    text: 'Go to Payment',
                     onPress: () => {
-                        Alert.alert('Success!', `Payment successful! You bought ${quantity} ticket(s) for $${totalPrice}.`);
+                        router.push('/(tabs)/payment');
                     }
                 }
             ]
@@ -216,6 +218,7 @@ export default function EventDetailScreen() {
                             <Pressable style={styles.addButton} onPress={() => {
                                 addToCart({ eventId: event.id, quantity });
                                 Alert.alert('Added!', `${quantity} ticket(s) added to cart.`);
+                                setQuantity(1); // Reset quantity to 1 after adding
                             }}>
                                 <Text style={styles.addButtonText}>ADD</Text>
                             </Pressable>
@@ -286,10 +289,10 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     backButton: {
-        width: 32,
-        height: 32,
-        borderRadius: 16,
-        backgroundColor: 'rgba(255,255,255,0.2)',
+        width: 40,
+        height: 40,
+        borderRadius: 8,
+        backgroundColor: Colors.white + '15',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -301,29 +304,30 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        paddingVertical: 10,
+        paddingHorizontal: 20,
+        paddingTop: 8,
+        paddingBottom: 12,
         backgroundColor: Colors.primary,
     },
     headerTitle: {
-        fontSize: 16,
-        fontWeight: '600',
+        fontSize: 24,
+        fontWeight: 'bold',
         color: Colors.white,
     },
     headerSpacer: {
-        width: 32,
+        width: 40,
     },
     backIcon: {
         color: Colors.white,
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
     },
     imageCard: {
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.white,
         borderRadius: 12,
         padding: 0,
         marginBottom: 16,
-        shadowColor: '#000',
+        shadowColor: Colors.black,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.05,
         shadowRadius: 2,
@@ -423,40 +427,50 @@ const styles = StyleSheet.create({
     },
     addButton: {
         flex: 1,
-        backgroundColor: Colors.surface,
-        borderWidth: 2,
+        backgroundColor: Colors.white,
+        borderWidth: 1,
         borderColor: Colors.primary,
         borderRadius: 12,
-        paddingVertical: 14,
+        paddingVertical: 16,
         alignItems: 'center',
+        shadowColor: Colors.black,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
     },
     addButtonText: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: '500',
         color: Colors.primary,
     },
     buyButton: {
         flex: 2,
         backgroundColor: Colors.primary,
         borderRadius: 12,
-        paddingVertical: 14,
+        paddingVertical: 16,
         alignItems: 'center',
+        shadowColor: Colors.black,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
     },
     buyButtonText: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: '500',
         color: Colors.white,
     },
-    // Details Section - Modern Card Style
+    // Details Section - Modern Card Style matching Settings
     detailsSection: {
         marginTop: 10,
     },
     detailCard: {
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.white,
         borderRadius: 12,
         padding: 16,
-        marginBottom: 12,
-        shadowColor: '#000',
+        marginBottom: 2,
+        shadowColor: Colors.black,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.05,
         shadowRadius: 2,
@@ -467,15 +481,12 @@ const styles = StyleSheet.create({
     },
     detailLabel: {
         fontSize: 12,
-        fontWeight: '600',
         color: Colors.textSecondary,
-        textTransform: 'uppercase',
-        letterSpacing: 0.5,
-        marginBottom: 4,
+        marginBottom: 2,
     },
     detailValue: {
         fontSize: 16,
-        fontWeight: '600',
+        fontWeight: '500',
         color: Colors.text,
         marginBottom: 2,
     },
@@ -484,11 +495,11 @@ const styles = StyleSheet.create({
         color: Colors.textSecondary,
     },
     descriptionCard: {
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.white,
         borderRadius: 12,
         padding: 16,
-        marginBottom: 12,
-        shadowColor: '#000',
+        marginBottom: 2,
+        shadowColor: Colors.black,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.05,
         shadowRadius: 2,
