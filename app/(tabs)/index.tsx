@@ -1,20 +1,14 @@
-// Components
 import { EventsList } from '@/lib/components/EventsList';
 import { FilterModal } from '@/lib/components/FilterModal';
 import { HomeHeader } from '@/lib/components/HomeHeader';
 import { SearchSection } from '@/lib/components/SearchSection';
-
-// Hooks
 import { useEventFiltering } from '@/lib/hooks/useEventFiltering';
 import { useLocationFilter } from '@/lib/hooks/useLocationFilter';
 import { useScrollAnimation } from '@/lib/hooks/useScrollAnimation';
-
-// Other imports
 import { mockCategories } from '@/lib/data/mockEvents';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-// Main Component
 export default function HomeScreen() {
   const [showFilterModal, setShowFilterModal] = useState<boolean>(false);
 
@@ -33,10 +27,9 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
+
       <HomeHeader onFilterPress={() => setShowFilterModal(true)} />
 
-      {/* Search Section */}
       <SearchSection
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -47,13 +40,11 @@ export default function HomeScreen() {
         searchSectionOpacity={searchSectionOpacity}
       />
 
-      {/* Events List */}
       <EventsList
         events={sortedEvents}
         scrollHandler={scrollHandler}
       />
 
-      {/* Filter Modal */}
       <FilterModal
         visible={showFilterModal}
         onClose={() => setShowFilterModal(false)}

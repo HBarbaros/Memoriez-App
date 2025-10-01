@@ -69,16 +69,24 @@ export default function EventDetailScreen() {
     const handlePurchase = () => {
         // Add to cart and navigate to payment
         addToCart({ eventId: event.id, quantity });
-        setQuantity(1); // Reset quantity
 
         Alert.alert(
             'Added to Payment',
-            `${quantity} ticket(s) added to payment queue. Redirecting to payment page...`,
+            `${quantity} ticket(s) added to payment queue. Do you want to proceed to payment now?`,
             [
+                {
+                    text: 'Continue Shopping',
+                    style: 'cancel',
+                    onPress: () => {
+                        // Reset quantity when continuing shopping
+                        setQuantity(1);
+                    }
+                },
                 {
                     text: 'Go to Payment',
                     onPress: () => {
                         router.push('/(tabs)/payment');
+                        setQuantity(1);
                     }
                 }
             ]
@@ -123,14 +131,12 @@ export default function EventDetailScreen() {
                             <Text style={styles.categoryBadgeText}>{event.category}</Text>
                         </View>
                     </View>
-                    {/* Event Title and Basic Info */}
                     <View style={styles.titleSection}>
                         <Text style={styles.title}>{event.title}</Text>
                         <Text style={styles.organizer}>{event.organizer}</Text>
                         <Text style={styles.date}>{formatDate(event.date)}</Text>
                     </View>
 
-                    {/* Price Display */}
                     {event.price && (
                         <View style={styles.priceSection}>
                             <Text style={styles.priceValue}>${event.price}</Text>
@@ -141,7 +147,6 @@ export default function EventDetailScreen() {
 
                     {/* Event Details Cards */}
                     <View style={styles.detailsSection}>
-                        {/* Age restriction - only show if exists */}
                         {event.ageRestriction && (
                             <View style={styles.detailCard}>
                                 <View style={styles.detailContent}>
@@ -202,7 +207,6 @@ export default function EventDetailScreen() {
 
                     {/* Bottom Action Section - Quantity + Buttons */}
                     <View style={styles.bottomActionSection}>
-                        {/* Quantity Selector */}
                         <View style={styles.quantitySelector}>
                             <Pressable style={styles.quantityButton} onPress={handleQuantityDecrease}>
                                 <Text style={styles.quantityButtonText}>-</Text>
@@ -218,7 +222,7 @@ export default function EventDetailScreen() {
                             <Pressable style={styles.addButton} onPress={() => {
                                 addToCart({ eventId: event.id, quantity });
                                 Alert.alert('Added!', `${quantity} ticket(s) added to cart.`);
-                                setQuantity(1); // Reset quantity to 1 after adding
+                                setQuantity(1);
                             }}>
                                 <Text style={styles.addButtonText}>ADD</Text>
                             </Pressable>
@@ -337,7 +341,7 @@ const styles = StyleSheet.create({
     },
     cardImage: {
         width: '100%',
-        height: 160, // Smaller inside card
+        height: 160,
         borderRadius: 12,
     },
     categoryBadge: {
@@ -356,7 +360,7 @@ const styles = StyleSheet.create({
     content: {
         padding: 16,
         paddingTop: 20,
-        paddingBottom: 100, // Extra space for tab bar
+        paddingBottom: 100,
     },
     titleSection: {
         alignItems: 'center',
@@ -378,7 +382,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: Colors.textSecondary,
     },
-    // Price Section
     priceSection: {
         alignItems: 'center',
         marginBottom: 20,
@@ -388,7 +391,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: Colors.text,
     },
-    // Bottom Action Section
     bottomActionSection: {
         marginTop: 25,
         marginBottom: 20,
@@ -461,7 +463,6 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: Colors.white,
     },
-    // Details Section - Modern Card Style matching Settings
     detailsSection: {
         marginTop: 10,
     },
@@ -511,8 +512,6 @@ const styles = StyleSheet.create({
         color: Colors.text,
     },
 
-
-    // Tab Navigation Styles - Exactly matching native tab bar
     tabBar: {
         flexDirection: 'row',
         position: 'absolute',

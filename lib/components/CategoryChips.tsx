@@ -10,14 +10,12 @@ interface CategoryChipsProps {
     onCategorySelect: (category: string) => void;
 }
 
-// CategoryChips component for filtering events by category
 const CategoryChips: React.FC<CategoryChipsProps> = ({
     categories,
     selectedCategory,
     onCategorySelect
 }) => {
     const handleCategoryPress = (categoryName: string) => {
-        // Om samma kategori väljs igen, rensa filtret
         if (selectedCategory === categoryName) {
             onCategorySelect('');
         } else {
@@ -32,7 +30,6 @@ const CategoryChips: React.FC<CategoryChipsProps> = ({
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.scrollContainer}
             >
-                {/* "All" chip för att visa alla events */}
                 <Pressable
                     style={[
                         styles.chip,
@@ -48,7 +45,6 @@ const CategoryChips: React.FC<CategoryChipsProps> = ({
                     </Text>
                 </Pressable>
 
-                {/* Category chips */}
                 {categories.map((category) => {
                     const isSelected = selectedCategory === category.name;
                     return (

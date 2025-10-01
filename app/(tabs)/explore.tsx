@@ -65,10 +65,10 @@ export default function SettingsScreen() {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* User Info Section */}
+
         <View style={styles.userSection}>
           <View style={styles.userAvatar}>
-            <Text style={styles.avatarText}>JD</Text>
+            <Text style={styles.avatarText}>BO</Text>
           </View>
           <View style={styles.userInfo}>
             <Text style={styles.userName}>Barbaros</Text>

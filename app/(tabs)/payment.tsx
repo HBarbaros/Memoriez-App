@@ -12,7 +12,6 @@ import {
     Alert,
     FlatList,
     Image,
-    Keyboard,
     KeyboardAvoidingView,
     Modal,
     Platform,
@@ -33,7 +32,6 @@ export default function PaymentScreen() {
     const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
     const [showPaymentForm, setShowPaymentForm] = useState(false);
 
-    // Payment form states
     const [paymentForm, setPaymentForm] = useState({
         firstName: '',
         lastName: '',
@@ -45,6 +43,27 @@ export default function PaymentScreen() {
         city: '',
         zipCode: ''
     });
+
+    // Helper function to update form fields
+    const updateFormField = (field: keyof typeof paymentForm) => (text: string) => {
+        setPaymentForm(prev => ({ ...prev, [field]: text }));
+    };
+
+    // Helper function to close modal and reset form
+    const closePaymentModal = () => {
+        setShowPaymentForm(false);
+        setPaymentForm({
+            firstName: '',
+            lastName: '',
+            email: '',
+            cardNumber: '',
+            expiryDate: '',
+            cvv: '',
+            address: '',
+            city: '',
+            zipCode: ''
+        });
+    };
 
     const getCartEventsWithDetails = () => {
         return cartItems.map(cartItem => {
@@ -91,37 +110,20 @@ export default function PaymentScreen() {
             Alert.alert('No Events Selected', 'Please select events to pay for.');
             return;
         }
-
-        // Show payment form instead of direct payment
         setShowPaymentForm(true);
     };
 
     const handlePaymentSubmit = () => {
-        // Validate form
         if (!paymentForm.firstName || !paymentForm.lastName || !paymentForm.email ||
             !paymentForm.cardNumber || !paymentForm.expiryDate || !paymentForm.cvv) {
             Alert.alert('Missing Information', 'Please fill in all required fields.');
             return;
         }
 
-        // Process payment
         Alert.alert('Payment Successful!', 'Your payment has been processed.');
         markAsPaid(selectedEvents);
         setSelectedEvents([]);
-        setShowPaymentForm(false);
-
-        // Reset form
-        setPaymentForm({
-            firstName: '',
-            lastName: '',
-            email: '',
-            cardNumber: '',
-            expiryDate: '',
-            cvv: '',
-            address: '',
-            city: '',
-            zipCode: ''
-        });
+        closePaymentModal();
     };
 
     const renderCartItem = ({ item }: { item: Event & { addedDate: string; quantity: number } }) => {
@@ -231,12 +233,11 @@ export default function PaymentScreen() {
                 </>
             )}
 
-            {/* Payment Form Modal */}
             <Modal
                 visible={showPaymentForm}
                 animationType="slide"
                 presentationStyle="pageSheet"
-                onRequestClose={() => setShowPaymentForm(false)}
+                onRequestClose={closePaymentModal}
             >
                 <KeyboardAvoidingView
                     style={styles.modalContainer}
@@ -248,7 +249,7 @@ export default function PaymentScreen() {
                             <Text style={styles.modalTitle}>Payment Information</Text>
                             <Pressable
                                 style={styles.closeButton}
-                                onPress={() => setShowPaymentForm(false)}
+                                onPress={closePaymentModal}
                             >
                                 <Text style={styles.closeButtonText}>×</Text>
                             </Pressable>
@@ -271,10 +272,9 @@ export default function PaymentScreen() {
                                         <TextInput
                                             style={styles.input}
                                             value={paymentForm.firstName}
-                                            onChangeText={(text) => setPaymentForm({ ...paymentForm, firstName: text })}
+                                            onChangeText={updateFormField('firstName')}
                                             placeholder="John"
-                                            returnKeyType="next"
-                                            blurOnSubmit={false}
+                                            placeholderTextColor={Colors.textSecondary}
                                         />
                                     </View>
                                     <View style={styles.inputField}>
@@ -282,10 +282,9 @@ export default function PaymentScreen() {
                                         <TextInput
                                             style={styles.input}
                                             value={paymentForm.lastName}
-                                            onChangeText={(text) => setPaymentForm({ ...paymentForm, lastName: text })}
+                                            onChangeText={updateFormField('lastName')}
                                             placeholder="Doe"
-                                            returnKeyType="next"
-                                            blurOnSubmit={false}
+                                            placeholderTextColor={Colors.textSecondary}
                                         />
                                     </View>
                                 </View>
@@ -295,11 +294,10 @@ export default function PaymentScreen() {
                                     <TextInput
                                         style={styles.input}
                                         value={paymentForm.email}
-                                        onChangeText={(text) => setPaymentForm({ ...paymentForm, email: text })}
+                                        onChangeText={updateFormField('email')}
                                         placeholder="john.doe@email.com"
+                                        placeholderTextColor={Colors.textSecondary}
                                         keyboardType="email-address"
-                                        returnKeyType="next"
-                                        blurOnSubmit={false}
                                         autoCapitalize="none"
                                     />
                                 </View>
@@ -314,11 +312,10 @@ export default function PaymentScreen() {
                                     <TextInput
                                         style={styles.input}
                                         value={paymentForm.cardNumber}
-                                        onChangeText={(text) => setPaymentForm({ ...paymentForm, cardNumber: text })}
+                                        onChangeText={updateFormField('cardNumber')}
                                         placeholder="1234 5678 9012 3456"
+                                        placeholderTextColor={Colors.textSecondary}
                                         keyboardType="numeric"
-                                        returnKeyType="next"
-                                        blurOnSubmit={false}
                                     />
                                 </View>
 
@@ -328,10 +325,9 @@ export default function PaymentScreen() {
                                         <TextInput
                                             style={styles.input}
                                             value={paymentForm.expiryDate}
-                                            onChangeText={(text) => setPaymentForm({ ...paymentForm, expiryDate: text })}
+                                            onChangeText={updateFormField('expiryDate')}
                                             placeholder="MM/YY"
-                                            returnKeyType="next"
-                                            blurOnSubmit={false}
+                                            placeholderTextColor={Colors.textSecondary}
                                         />
                                     </View>
                                     <View style={styles.inputField}>
@@ -339,11 +335,10 @@ export default function PaymentScreen() {
                                         <TextInput
                                             style={styles.input}
                                             value={paymentForm.cvv}
-                                            onChangeText={(text) => setPaymentForm({ ...paymentForm, cvv: text })}
+                                            onChangeText={updateFormField('cvv')}
                                             placeholder="123"
+                                            placeholderTextColor={Colors.textSecondary}
                                             keyboardType="numeric"
-                                            returnKeyType="next"
-                                            blurOnSubmit={false}
                                         />
                                     </View>
                                 </View>
@@ -358,10 +353,9 @@ export default function PaymentScreen() {
                                     <TextInput
                                         style={styles.input}
                                         value={paymentForm.address}
-                                        onChangeText={(text) => setPaymentForm({ ...paymentForm, address: text })}
+                                        onChangeText={updateFormField('address')}
                                         placeholder="123 Main Street"
-                                        returnKeyType="next"
-                                        blurOnSubmit={false}
+                                        placeholderTextColor={Colors.textSecondary}
                                     />
                                 </View>
 
@@ -371,10 +365,9 @@ export default function PaymentScreen() {
                                         <TextInput
                                             style={styles.input}
                                             value={paymentForm.city}
-                                            onChangeText={(text) => setPaymentForm({ ...paymentForm, city: text })}
+                                            onChangeText={updateFormField('city')}
                                             placeholder="Stockholm"
-                                            returnKeyType="next"
-                                            blurOnSubmit={false}
+                                            placeholderTextColor={Colors.textSecondary}
                                         />
                                     </View>
                                     <View style={styles.inputField}>
@@ -382,11 +375,10 @@ export default function PaymentScreen() {
                                         <TextInput
                                             style={styles.input}
                                             value={paymentForm.zipCode}
-                                            onChangeText={(text) => setPaymentForm({ ...paymentForm, zipCode: text })}
+                                            onChangeText={updateFormField('zipCode')}
                                             placeholder="12345"
+                                            placeholderTextColor={Colors.textSecondary}
                                             keyboardType="numeric"
-                                            returnKeyType="done"
-                                            onSubmitEditing={Keyboard.dismiss}
                                         />
                                     </View>
                                 </View>
@@ -407,7 +399,7 @@ export default function PaymentScreen() {
                         </ScrollView>
 
                         <View style={styles.modalActions}>
-                            <Pressable style={styles.cancelButton} onPress={() => setShowPaymentForm(false)}>
+                            <Pressable style={styles.cancelButton} onPress={closePaymentModal}>
                                 <Text style={styles.cancelButtonText}>Cancel</Text>
                             </Pressable>
                             <Pressable style={styles.submitButton} onPress={handlePaymentSubmit}>
@@ -420,6 +412,14 @@ export default function PaymentScreen() {
         </SafeAreaView>
     );
 }
+
+const commonShadow = {
+    shadowColor: Colors.black,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -675,11 +675,7 @@ const styles = StyleSheet.create({
         color: Colors.text,
         borderWidth: 1,
         borderColor: Colors.border,
-        shadowColor: Colors.black,
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 2,
-        elevation: 1,
+        ...commonShadow,
     },
     summaryCard: {
         backgroundColor: Colors.white,
@@ -688,11 +684,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        shadowColor: Colors.black,
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 2,
-        elevation: 1,
+        ...commonShadow,
     },
     summaryText: {
         fontSize: 16,

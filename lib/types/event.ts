@@ -1,5 +1,3 @@
-// TypeScript types for Event model
-
 export interface Event {
   id: string;
   title: string;
@@ -20,7 +18,7 @@ export interface Event {
   attendeeCount: number;
   maxAttendees?: number;
   tags: string[];
-  ageRestriction?: string; // Optional age restriction like "18+", "21+", etc.
+  ageRestriction?: string; 
 }
 
 export interface Category {
