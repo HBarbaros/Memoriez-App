@@ -13,9 +13,9 @@ Detta är en [Expo](https://expo.dev) React Native applikation för att upptäck
 
 ## Uppfyllda Krav
 
-### Krav för Godkänt ✅
+### Krav för Godkänt 
 
-1. **React Native Komponenter (4+ krävs):**
+1. **React Native Komponenter**
    - ✅ **View** - Grundläggande layoutcontainer
    - ✅ **Text** - Textvisning och styling
    - ✅ **ScrollView** - Scrollbar innehållsvisning
@@ -30,7 +30,7 @@ Detta är en [Expo](https://expo.dev) React Native applikation för att upptäck
    - ✅ **Alert** - Systemnotifikationer och bekräftelsedialoger
    - ✅ **KeyboardAvoidingView** - Klavyehantering för formulär
 
-2. **Expo SDK Komponenter (4+ krävs):**
+2. **Expo SDK Komponenter**
    - ✅ **expo-router** - Filbaserad navigation och routing
    - ✅ **expo-linear-gradient** - Gradient bakgrunder för modern UI
    - ✅ **expo-location** - GPS-baserad platslokalisering och avståndsberäkning
@@ -40,36 +40,28 @@ Detta är en [Expo](https://expo.dev) React Native applikation för att upptäck
    - ✅ **@expo/vector-icons** - Vektorikoner (MaterialIcons)
    - ✅ **expo-symbols** - iOS-specifika symboler och ikoner
 
-3. **React Navigation:** ✅ 
+3. **React Navigation:**  
    - Tab-baserad navigation med expo-router
    - Stack navigation för event details
-   - Filbaserad routing struktur
 
-4. **Git & GitHub:** ✅ 
+4. **Git & GitHub:** 
    - Repository: https://github.com/HBarbaros/Memoriez-App
-   - Fullständig commit-historik
-   - .git mapp inkluderad
 
-5. **README.md fil:** ✅ 
-   - Titel och beskrivning
-   - Byggd- och körningsinstruktioner
-   - Uppfyllda krav listade
+### Krav för Väl Godkänt
 
-### Krav för Väl Godkänt ✅
-
-1. **Alla godkänt-punkter:** ✅ Uppfyllda
+1. **Alla godkänt-punkter:** 
 
 2. **Externa moduler:**
    - ✅ **jotai** - State management för cart/payment funktionalitet
    - ✅ **react-hook-form** - Formulärhantering och validering
    - ✅ **axios** - HTTP-klient för API-kommunikation
 
-3. **Web-API integration:** ✅
+3. **Web-API integration:** 
    - Mock API struktur implementerad
    - HTTP client (axios) konfigurerad
    - API endpoints definierade för events
 
-4. **App Store förberedelse:** ✅
+4. **App Store förberedelse:** 
    - app.json konfigurerad med ikoner och splash screens
    - iOS och Android assets inkluderade
    - Production build-konfiguration
