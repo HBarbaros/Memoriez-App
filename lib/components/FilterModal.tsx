@@ -17,6 +17,18 @@ interface FilterModalProps {
     sortBy: string;
     onSortByChange: (sort: string) => void;
     onClearFilters: () => void;
+    selectedCategory: string;
+    onCategoryChange: (category: string) => void;
+    selectedDateFilter: string;
+    onDateFilterChange: (filter: string) => void;
+    customDateRange: { from: string; to: string };
+    onCustomDateRangeChange: (range: { from: string; to: string }) => void;
+    selectedPriceRange: string;
+    onPriceRangeChange: (range: string) => void;
+    customPriceRange: { min: string; max: string };
+    onCustomPriceRangeChange: (range: { min: string; max: string }) => void;
+    customCity: string;
+    onCustomCityChange: (city: string) => void;
 }
 
 export const FilterModal: React.FC<FilterModalProps> = ({
@@ -30,14 +42,19 @@ export const FilterModal: React.FC<FilterModalProps> = ({
     sortBy,
     onSortByChange,
     onClearFilters,
+    selectedCategory,
+    onCategoryChange,
+    selectedDateFilter,
+    onDateFilterChange,
+    customDateRange,
+    onCustomDateRangeChange,
+    selectedPriceRange,
+    onPriceRangeChange,
+    customPriceRange,
+    onCustomPriceRangeChange,
+    customCity,
+    onCustomCityChange,
 }) => {
-    const [selectedDateFilter, setSelectedDateFilter] = useState('all');
-    const [customDateRange, setCustomDateRange] = useState({ from: '', to: '' });
-    const [selectedPriceRange, setSelectedPriceRange] = useState('all');
-    const [customPriceRange, setCustomPriceRange] = useState({ min: '', max: '' });
-    const [selectedCategory, setSelectedCategory] = useState('all');
-    const [customCity, setCustomCity] = useState('');
-
     const [expandedSection, setExpandedSection] = useState<string | null>(null);
     const scrollViewRef = useRef<ScrollView>(null);
 
@@ -92,19 +109,15 @@ export const FilterModal: React.FC<FilterModalProps> = ({
     };
 
     const handleClearFilters = () => {
-        // Reset local states
-        setSelectedDateFilter('all');
-        setCustomDateRange({ from: '', to: '' });
-        setSelectedPriceRange('all');
-        setCustomPriceRange({ min: '', max: '' });
-        setSelectedCategory('all');
-        setCustomCity('');
         setExpandedSection(null);
-
-        onLocationFilterChange('all');
-
         onClearFilters();
     };
+
+    const handleApplyFilters = () => {
+        // Apply all filters and close modal
+        handleModalClose();
+    };
+
     const handleModalClose = () => {
         // Reset expanded sections when modal closes
         setExpandedSection(null);
@@ -182,7 +195,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                 selectedDateFilter === option.key && styles.modernOptionActive
                                             ]}
                                             onPress={() => {
-                                                setSelectedDateFilter(option.key);
+                                                onDateFilterChange(option.key);
                                                 if (option.key !== 'custom') {
                                                     setExpandedSection(null);
                                                 }
@@ -224,7 +237,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                     style={styles.modernInput}
                                                     placeholder="DD/MM/YYYY"
                                                     value={customDateRange.from}
-                                                    onChangeText={(text) => setCustomDateRange({ ...customDateRange, from: text })}
+                                                    onChangeText={(text) => onCustomDateRangeChange({ ...customDateRange, from: text })}
                                                     placeholderTextColor="#94a3b8"
                                                     returnKeyType="next"
                                                     blurOnSubmit={false}
@@ -241,7 +254,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                     style={styles.modernInput}
                                                     placeholder="DD/MM/YYYY"
                                                     value={customDateRange.to}
-                                                    onChangeText={(text) => setCustomDateRange({ ...customDateRange, to: text })}
+                                                    onChangeText={(text) => onCustomDateRangeChange({ ...customDateRange, to: text })}
                                                     placeholderTextColor="#94a3b8"
                                                     returnKeyType="done"
                                                     onSubmitEditing={Keyboard.dismiss}
@@ -272,14 +285,12 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                         <Text style={styles.cardTitle}>Categories</Text>
                                         <Text style={styles.cardSubtitle}>
                                             {selectedCategory === 'all' ? 'All Categories' :
-                                                selectedCategory === 'music' ? 'Music' :
-                                                    selectedCategory === 'sports' ? 'Sports' :
-                                                        selectedCategory === 'arts' ? 'Arts & Culture' :
-                                                            selectedCategory === 'food' ? 'Food & Drink' :
-                                                                selectedCategory === 'nightlife' ? 'Nightlife' :
-                                                                    selectedCategory === 'business' ? 'Business' :
-                                                                        selectedCategory === 'outdoors' ? 'Outdoors' :
-                                                                            'All Categories'}
+                                                selectedCategory === 'Music' ? 'Music' :
+                                                    selectedCategory === 'Sports' ? 'Sports' :
+                                                        selectedCategory === 'Party' ? 'Party' :
+                                                            selectedCategory === 'Food' ? 'Food & Drink' :
+                                                                selectedCategory === 'Conference' ? 'Conference' :
+                                                                    'All Categories'}
                                         </Text>
                                     </View>
                                 </View>
@@ -294,13 +305,11 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                 <View style={styles.optionsGrid}>
                                     {[
                                         { key: 'all', label: 'All Categories', desc: 'Every type' },
-                                        { key: 'music', label: 'Music', desc: 'Concerts & shows' },
-                                        { key: 'sports', label: 'Sports', desc: 'Games & matches' },
-                                        { key: 'arts', label: 'Arts & Culture', desc: 'Museums & galleries' },
-                                        { key: 'food', label: 'Food & Drink', desc: 'Restaurants & bars' },
-                                        { key: 'nightlife', label: 'Nightlife', desc: 'Clubs & parties' },
-                                        { key: 'business', label: 'Business', desc: 'Networking & meetings' },
-                                        { key: 'outdoors', label: 'Outdoors', desc: 'Nature & activities' }
+                                        { key: 'Music', label: 'Music', desc: 'Concerts & shows' },
+                                        { key: 'Sports', label: 'Sports', desc: 'Games & matches' },
+                                        { key: 'Party', label: 'Party', desc: 'Clubs & parties' },
+                                        { key: 'Food', label: 'Food & Drink', desc: 'Restaurants & bars' },
+                                        { key: 'Conference', label: 'Conference', desc: 'Business & meetings' }
                                     ].map((option) => (
                                         <Pressable
                                             key={option.key}
@@ -309,7 +318,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                 selectedCategory === option.key && styles.modernOptionActive
                                             ]}
                                             onPress={() => {
-                                                setSelectedCategory(option.key);
+                                                onCategoryChange(option.key);
                                                 setExpandedSection(null);
                                             }}
                                         >
@@ -380,7 +389,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                 selectedPriceRange === option.key && styles.modernOptionActive
                                             ]}
                                             onPress={() => {
-                                                setSelectedPriceRange(option.key);
+                                                onPriceRangeChange(option.key);
                                                 if (option.key !== 'custom') {
                                                     setExpandedSection(null);
                                                 }
@@ -422,7 +431,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                     style={styles.modernInput}
                                                     placeholder="0"
                                                     value={customPriceRange.min}
-                                                    onChangeText={(text) => setCustomPriceRange({ ...customPriceRange, min: text })}
+                                                    onChangeText={(text) => onCustomPriceRangeChange({ ...customPriceRange, min: text })}
                                                     keyboardType="numeric"
                                                     placeholderTextColor="#94a3b8"
                                                     returnKeyType="next"
@@ -435,7 +444,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                     style={styles.modernInput}
                                                     placeholder="999"
                                                     value={customPriceRange.max}
-                                                    onChangeText={(text) => setCustomPriceRange({ ...customPriceRange, max: text })}
+                                                    onChangeText={(text) => onCustomPriceRangeChange({ ...customPriceRange, max: text })}
                                                     keyboardType="numeric"
                                                     placeholderTextColor="#94a3b8"
                                                     returnKeyType="done"
@@ -528,7 +537,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
                                                     style={styles.modernInput}
                                                     placeholder="Copenhagen, Oslo, Helsinki..."
                                                     value={customCity}
-                                                    onChangeText={setCustomCity}
+                                                    onChangeText={onCustomCityChange}
                                                     placeholderTextColor="#94a3b8"
                                                     returnKeyType="done"
                                                     onSubmitEditing={Keyboard.dismiss}
@@ -611,7 +620,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
 
                     {/* Action Buttons */}
                     <View style={styles.actions}>
-                        <Pressable style={styles.applyButton} onPress={handleModalClose}>
+                        <Pressable style={styles.applyButton} onPress={handleApplyFilters}>
                             <Text style={styles.applyButtonText}>Apply Filters</Text>
                         </Pressable>
 

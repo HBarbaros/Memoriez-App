@@ -2,10 +2,10 @@ import { EventsList } from '@/lib/components/EventsList';
 import { FilterModal } from '@/lib/components/FilterModal';
 import { HomeHeader } from '@/lib/components/HomeHeader';
 import { SearchSection } from '@/lib/components/SearchSection';
+import { mockCategories } from '@/lib/data/mockEvents';
 import { useEventFiltering } from '@/lib/hooks/useEventFiltering';
 import { useLocationFilter } from '@/lib/hooks/useLocationFilter';
 import { useScrollAnimation } from '@/lib/hooks/useScrollAnimation';
-import { mockCategories } from '@/lib/data/mockEvents';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -21,6 +21,11 @@ export default function HomeScreen() {
     sortBy, setSortBy,
     locationFilter, setLocationFilter,
     distanceRadius, setDistanceRadius,
+    selectedDateFilter, setSelectedDateFilter,
+    customDateRange, setCustomDateRange,
+    selectedPriceRange, setSelectedPriceRange,
+    customPriceRange, setCustomPriceRange,
+    customCity, setCustomCity,
     sortedEvents,
     clearFilters
   } = useEventFiltering({ userLocation, currentCity, calculateDistance });
@@ -56,6 +61,18 @@ export default function HomeScreen() {
         sortBy={sortBy}
         onSortByChange={setSortBy}
         onClearFilters={clearFilters}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        selectedDateFilter={selectedDateFilter}
+        onDateFilterChange={setSelectedDateFilter}
+        customDateRange={customDateRange}
+        onCustomDateRangeChange={setCustomDateRange}
+        selectedPriceRange={selectedPriceRange}
+        onPriceRangeChange={setSelectedPriceRange}
+        customPriceRange={customPriceRange}
+        onCustomPriceRangeChange={setCustomPriceRange}
+        customCity={customCity}
+        onCustomCityChange={setCustomCity}
       />
     </View>
   );
