@@ -15,28 +15,23 @@ export const useEventFiltering = ({ userLocation, currentCity, calculateDistance
   const [locationFilter, setLocationFilter] = useState<string>('all'); // 'all', 'nearby', 'current_city'
   const [distanceRadius, setDistanceRadius] = useState<number>(20); // km
   
-  // Additional filter states
   const [selectedDateFilter, setSelectedDateFilter] = useState<string>('all');
   const [customDateRange, setCustomDateRange] = useState({ from: '', to: '' });
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>('all');
   const [customPriceRange, setCustomPriceRange] = useState({ min: '', max: '' });
   const [customCity, setCustomCity] = useState<string>('');
 
-  // Enhanced filtering with location-based search
   const filteredEvents = useMemo(() => {
     return mockEvents.filter((event: Event) => {
-      // Category filter
       const matchesCategory = selectedCategory === 'all' || 
-        event.category.toLowerCase() === selectedCategory.toLowerCase();
+        event.category === selectedCategory;
         
-      // Search filter
       const matchesSearch = !searchQuery || 
         event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         event.location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         event.organizer.toLowerCase().includes(searchQuery.toLowerCase());
       
-      // Date filter
       let matchesDate = true;
       if (selectedDateFilter !== 'all') {
         const eventDate = new Date(event.date);
@@ -58,8 +53,7 @@ export const useEventFiltering = ({ userLocation, currentCity, calculateDistance
           matchesDate = eventDate >= fromDate && eventDate <= toDate;
         }
       }
-      
-      // Price filter
+
       let matchesPrice = true;
       if (selectedPriceRange !== 'all') {
         const eventPrice = event.price || 0;
@@ -79,7 +73,6 @@ export const useEventFiltering = ({ userLocation, currentCity, calculateDistance
         }
       }
       
-      // Location-based filtering
       let matchesLocation = true;
       if (locationFilter === 'nearby' && userLocation) {
         const distance = calculateDistance(
@@ -105,7 +98,6 @@ export const useEventFiltering = ({ userLocation, currentCity, calculateDistance
     });
   }, [selectedCategory, searchQuery, selectedDateFilter, customDateRange, selectedPriceRange, customPriceRange, locationFilter, customCity, distanceRadius, userLocation, currentCity, calculateDistance]);
 
-  // Sort events based on user preference
   const sortedEvents = useMemo(() => {
     return [...filteredEvents].sort((a, b) => {
       if (sortBy === 'date') {
@@ -115,7 +107,7 @@ export const useEventFiltering = ({ userLocation, currentCity, calculateDistance
       } else if (sortBy === 'popularity') {
         return b.attendeeCount - a.attendeeCount;
       } else if (sortBy === 'distance' && userLocation) {
-        // Simple distance calculation (in real app, use proper distance formula)
+
         const distanceA = Math.abs(userLocation.coords.latitude - a.location.latitude);
         const distanceB = Math.abs(userLocation.coords.latitude - b.location.latitude);
         return distanceA - distanceB;

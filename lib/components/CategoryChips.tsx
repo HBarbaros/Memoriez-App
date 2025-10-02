@@ -17,7 +17,7 @@ const CategoryChips: React.FC<CategoryChipsProps> = ({
 }) => {
     const handleCategoryPress = (categoryName: string) => {
         if (selectedCategory === categoryName) {
-            onCategorySelect('');
+            onCategorySelect('all');
         } else {
             onCategorySelect(categoryName);
         }
@@ -33,13 +33,13 @@ const CategoryChips: React.FC<CategoryChipsProps> = ({
                 <Pressable
                     style={[
                         styles.chip,
-                        selectedCategory === '' && styles.selectedChip
+                        selectedCategory === 'all' && styles.selectedChip
                     ]}
-                    onPress={() => onCategorySelect('')}
+                    onPress={() => onCategorySelect('all')}
                 >
                     <Text style={[
                         styles.chipText,
-                        selectedCategory === '' && styles.selectedChipText
+                        selectedCategory === 'all' && styles.selectedChipText
                     ]}>
                         All
                     </Text>

@@ -107,7 +107,7 @@ export const mockEvents: Event[] = [
       longitude: 18.0649,
     },
     category: 'Sports',
-    imageUrl: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800',
+    imageUrl: 'https://images.unsplash.com/photo-1614632537190-23e4146777db?w=800',
     organizer: 'Football Fans Sweden',
     attendeeCount: 120,
     maxAttendees: 150,

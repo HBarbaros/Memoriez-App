@@ -34,7 +34,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onPress }) => {
     return (
         <Pressable style={styles.container} onPress={handlePress}>
             <Image
-                source={{ uri: imageError ? 'https://picsum.photos/300/200' : (event.imageUrl || 'https://picsum.photos/300/200') }}
+                source={{ uri: imageError ? 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800' : (event.imageUrl || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800') }}
                 style={styles.image}
                 resizeMode="cover"
                 onError={() => setImageError(true)}

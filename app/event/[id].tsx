@@ -1,9 +1,9 @@
-import { addToCartAtom } from '@/app/store/paymentStore';
 import { IconSymbol } from '@/lib/components/ui/icon-symbol';
 import { Colors } from '@/lib/constants/colors';
 import { Colors as ThemeColors } from '@/lib/constants/theme';
 import { mockEvents } from '@/lib/data/mockEvents';
 import { useColorScheme } from '@/lib/hooks/use-color-scheme';
+import { addToCartAtom } from '@/lib/store/paymentStore';
 import { Event } from '@/lib/types/event';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSetAtom } from 'jotai';
@@ -122,7 +122,7 @@ export default function EventDetailScreen() {
                     {/* Event Image Card */}
                     <View style={styles.imageCard}>
                         <Image
-                            source={{ uri: imageError ? 'https://picsum.photos/400/200' : (event.imageUrl || 'https://picsum.photos/400/200') }}
+                            source={{ uri: imageError ? 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800' : (event.imageUrl || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800') }}
                             style={styles.cardImage}
                             resizeMode="cover"
                             onError={() => setImageError(true)}

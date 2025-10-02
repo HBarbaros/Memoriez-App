@@ -1,10 +1,10 @@
+import { Colors } from '@/lib/constants/colors';
+import { mockEvents } from '@/lib/data/mockEvents';
 import {
     cartItemsAtom,
     markAsPaidAtom,
     removeFromCartAtom
-} from '@/app/store/paymentStore';
-import { Colors } from '@/lib/constants/colors';
-import { mockEvents } from '@/lib/data/mockEvents';
+} from '@/lib/store/paymentStore';
 import { Event } from '@/lib/types/event';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useState } from 'react';
